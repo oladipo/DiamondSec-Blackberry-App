@@ -1,0 +1,21 @@
+<loader version="1.0">
+	<application id="DiamondSec">
+		<name >
+			
+		</name>
+		<description >
+			
+		</description>
+		<version >
+			1.0.0
+		</version>
+		<vendor >
+			BlackBerry Developer
+		</vendor>
+		<copyright >
+			Copyright (c) 2014 BlackBerry Developer
+		</copyright>
+
+	</application>
+
+</loader>

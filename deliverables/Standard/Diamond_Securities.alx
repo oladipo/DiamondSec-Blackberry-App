@@ -1,0 +1,31 @@
+<loader version="1.0">
+	<application id="Diamond_Securities">
+		<name >
+			Diamond Securities
+		</name>
+		<description >
+			Diamond Securities Mobile Trading App
+		</description>
+		<version >
+			1.0.0
+		</version>
+		<vendor >
+			Synkron Solutions Limited
+		</vendor>
+		<copyright >
+			Copyright (c) 2014 Synkron Solutions Limited
+		</copyright>
+		<fileset Java="1.54" _blackberryVersion="[6.0.0)">
+			<directory >
+				6.0.0
+			</directory>
+			<files >
+				Diamond_Securities.cod
+
+			</files>
+
+		</fileset>
+
+	</application>
+
+</loader>
