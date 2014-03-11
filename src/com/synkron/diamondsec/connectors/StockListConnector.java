@@ -105,7 +105,7 @@ public class StockListConnector extends InfoWareConnector{
 							//previously stored, checked storage expiration to refresh data store.
 							
 							DataContext _dContext = new DataContext();
-							_dContext.set("isSaved", "true");
+							_dContext.set("isSaved", "false");
 							_dContext.commit();
 							ListStyleButtonField lsBtnField = new ListStyleButtonField(strDisplay,0){
 								int color = Color.WHITE;
