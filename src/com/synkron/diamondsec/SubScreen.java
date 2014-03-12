@@ -96,4 +96,9 @@ public class SubScreen extends BaseScreen {
 	public void close(){
 		UiApplication.getUiApplication().popScreen(this);
     }
+	
+	protected boolean onSavePrompt(){
+		return true;
+		
+	}
 }

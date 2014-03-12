@@ -1,32 +1,32 @@
 Manifest-Version: 1.0
 MIDlet-Version: 1.0.0
-MIDlet-Jar-Size: 664205
+MIDlet-Jar-Size: 664540
 RIM-COD-URL-5: Diamond_Securities-5.cod
-RIM-COD-SHA1-5: 5e e8 27 cc f0 06 66 55 66 a3 06 cf 42 d9 03 4e c8 e2 c7 7f
+RIM-COD-SHA1-5: de 38 3a 98 28 ca 65 0d a3 6f 95 5f 73 d9 ac 23 e4 f7 58 7c
 RIM-COD-URL-4: Diamond_Securities-4.cod
-RIM-COD-SHA1-4: 73 4a 2c b0 b0 0f 52 04 cb e2 3b 5f e6 e6 61 36 90 3c 7b 6d
+RIM-COD-SHA1-4: 9f 6f 70 1d 08 1a 6f 70 1c 5c 73 b9 31 d9 4b 4e 94 95 22 29
 RIM-COD-URL-3: Diamond_Securities-3.cod
-RIM-COD-SHA1-3: 06 34 c3 72 37 66 91 13 e2 45 ba 51 88 32 c7 c5 00 80 f0 68
+RIM-COD-SHA1-3: f7 a5 3b ec 02 f5 73 40 ee b2 dd c9 6d c4 70 7f 31 db d1 78
 RIM-COD-URL-2: Diamond_Securities-2.cod
 MicroEdition-Configuration: CLDC-1.1
 MIDlet-Jar-URL: DiamondSec.jar
 RIM-COD-Module-Dependencies: net_rim_cldc,net_rim_ui_api,net_rim_networkapi,net_rim_json_org
-RIM-COD-Size-5: 23336
-RIM-COD-SHA1-2: ba 95 08 b1 a6 72 e1 f6 3a e0 78 ff 22 1c c0 1c e6 74 69 e1
+RIM-COD-Size-5: 23620
+RIM-COD-SHA1-2: dc 21 8d 83 96 0e 3d ac f9 af 52 59 dc 5c cd 8c 41 b7 4c cb
 RIM-COD-URL-1: Diamond_Securities-1.cod
 RIM-COD-Size-4: 71080
-RIM-COD-SHA1-1: 06 33 38 a7 68 af 2d 7a 91 1c 3b 2b 67 5e e4 d0 84 2e b3 6b
-RIM-COD-Size-3: 63440
+RIM-COD-SHA1-1: 89 9b 80 2c 0d 71 06 41 50 bb f5 49 1d e9 5a 2b 0c e3 af 1c
+RIM-COD-Size-3: 63408
 RIM-COD-Size-2: 49244
 RIM-MIDlet-Flags-1: 0
 RIM-COD-Size-1: 58320
 RIM-COD-Module-Name: Diamond_Securities
 MIDlet-Name: DiamondSec
 RIM-COD-Size: 63708
-RIM-COD-Creation-Time: 1394546600
+RIM-COD-Creation-Time: 1394629428
 MIDlet-1: Diamond Securities,img/icon-80.png,
 RIM-COD-URL: Diamond_Securities.cod
 MIDlet-Description: Diamond Securities Mobile Trading App
-RIM-COD-SHA1: 4b f9 c4 c6 d1 89 87 49 2f a2 90 c2 3f 49 d8 0e 2c b9 b7 68
+RIM-COD-SHA1: 02 13 12 6b 87 05 cf 41 98 41 66 db 2b 03 ca 4b ba 63 b3 a1
 MicroEdition-Profile: MIDP-2.0
 MIDlet-Vendor: Synkron Solutions Limited

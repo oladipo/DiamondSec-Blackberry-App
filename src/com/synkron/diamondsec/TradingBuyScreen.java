@@ -17,6 +17,7 @@ import net.rim.device.api.ui.component.TextField;
 import net.rim.device.api.ui.container.*;
 import net.rim.device.api.ui.decor.BackgroundFactory;
 import net.rim.device.api.ui.decor.BorderFactory;
+import net.rim.device.api.ui.text.TextFilter;
 
 public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 	
@@ -30,7 +31,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 	CustomButtonField _btnConfirm;
 	TextField _txtFieldPrice, _txtFieldAmount;
 	
-	LabeledSwitch _orderSwitch;
+	LabeledSwitch _orderSwitch, _limitCondition;
 	
 	ObjectChoiceField _objChoiceDuration;
 	Stock _theStock;
@@ -160,7 +161,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
         _lblLimitCondition.setMargin(24,20,0,20);
         _lblLimitCondition.setText("Limit");
         
-        LabeledSwitch _limitCondition = new LabeledSwitch(switch_left, switch_right, 
+        _limitCondition = new LabeledSwitch(switch_left, switch_right, 
         		switch_left_focus, switch_right_focus, "Opening", "Closing", true ){
         	public void applyFont(){
         		_labelFont = getFont().derive( Font.PLAIN, getFont().getHeight() );
@@ -169,6 +170,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
         _limitCondition.setMargin(20,10,0,10);
         
 		_txtFieldPrice = new TextField(Field.FIELD_LEADING | TextField.NO_NEWLINE);
+		_txtFieldPrice.setFilter(TextFilter.get(TextFilter.NUMERIC));
 		_txtFieldPrice.setMaxSize(10);
 		_txtFieldPrice.setBorder(BorderFactory.createSimpleBorder(new XYEdges(2,2,2,2)));
 		_txtFieldPrice.setMargin(20,10,0,0);
@@ -176,6 +178,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 		_txtFieldPrice.setBackground(BackgroundFactory.createSolidBackground(Color.WHITE));
 		
 		_txtFieldAmount = new TextField(Field.FIELD_LEADING | TextField.NO_NEWLINE);
+		_txtFieldAmount.setFilter(TextFilter.get(TextFilter.NUMERIC));
 		_txtFieldAmount.setMaxSize(10);
 		_txtFieldAmount.setBorder(BorderFactory.createSimpleBorder(new XYEdges(2,2,2,2)));
 		_txtFieldAmount.setMargin(20,10,0,0);
@@ -230,6 +233,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 			//initiate trade request...
 			String URL = InfoWareConnector.API_TRADE_REQUEST_URL;
 			String strDateLimit = "";
+			String strLimitCondition = "";
 			int TRADE_ACTION = InfoWareConnector.API_TRADE_ACTION_BUY;
 			int ORDER_TYPE;
 			int TIME_IN_FORCE;
@@ -238,6 +242,12 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 				ORDER_TYPE = InfoWareConnector.API_ORDER_TYPE_MARKET;
 			}else{
 				ORDER_TYPE = InfoWareConnector.API_ORDER_TYPE_LIMIT;
+			}
+			
+			if(_limitCondition.getOnState()){
+				strLimitCondition = "Opening";
+			}else{
+				strLimitCondition  = "Closing";
 			}
 			//get Customer Number..
 			DataContext _dbContext = new DataContext();
@@ -281,9 +291,9 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 			_theTrade.strOrderType = "Market";
 			}else{_theTrade.strOrderType = "Limit";}
 			
-			_theTrade.strLimitCondition = "";
+			_theTrade.strLimitCondition = strLimitCondition;
 			_theTrade.strAmount = _txtFieldAmount.getText();
-			_theTrade.strDuration = strDateLimit;
+			_theTrade.strDuration = (String)_objChoiceDuration.getChoice(_objChoiceDuration.getSelectedIndex());;
 			
 			diamondSec.pushScreen(new TradingConfirmationScreen(_theStock, _theTrade));
 		}
