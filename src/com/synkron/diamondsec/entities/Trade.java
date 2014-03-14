@@ -7,4 +7,5 @@ public class Trade {
 	public String strAmount;
 	public String strDuration;
 	public String strPIN;
+	public String strPlaceTradeURL;
 }

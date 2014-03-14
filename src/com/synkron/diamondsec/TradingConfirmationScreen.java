@@ -1,5 +1,7 @@
 package com.synkron.diamondsec;
 
+import com.synkron.diamondsec.connectors.InfoWareConnector;
+import com.synkron.diamondsec.connectors.TradingConfirmationConnector;
 import com.synkron.diamondsec.entities.*;
 
 import net.rim.device.api.ui.Color;
@@ -163,7 +165,10 @@ public class TradingConfirmationScreen extends SubScreen {
 		_btnSubmit = new CustomButtonField("Confirm",Color.LIGHTGREEN);
 		_btnSubmit.setChangeListener(new FieldChangeListener(){
 			public void fieldChanged(Field field, int context) {
-				UiApplication.getUiApplication().pushScreen(new TradingStatusScreen());
+				String _Url = InfoWareConnector.API_PLACE_TRADE_ORDER_URL;
+				_Url = _Url+_txtPIN.getText()+"|"+_theTrade.strPlaceTradeURL;
+				TradingConfirmationConnector _connector = new TradingConfirmationConnector(_Url);
+				_connector.start();
 			}
 		});
 		_btnSubmit.setMargin(new XYEdges(20,0,10,0));

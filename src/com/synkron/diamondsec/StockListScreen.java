@@ -63,8 +63,8 @@ public class StockListScreen extends SubScreen {
 		}
 
 		if(!saved.equals("true")){
-			//String Url = InfoWareConnector.API_FULL_PRICE_LIST_URL;
-			String Url = InfoWareConnector.API_TRADEABLE_STOCKS_URL;
+			String Url = InfoWareConnector.API_FULL_PRICE_LIST_URL;
+			//String Url = InfoWareConnector.API_TRADEABLE_STOCKS_URL;
 			StockListConnector _connector = new StockListConnector(Url);
 			//_connector.run();
 			_connector.start();

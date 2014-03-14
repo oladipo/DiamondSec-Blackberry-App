@@ -1,19 +1,27 @@
 package com.synkron.diamondsec;
 
+import java.util.Date;
+
 import com.samples.toolkit.ui.component.PillButtonField;
 import com.samples.toolkit.ui.container.ListStyleButtonSet;
 import com.samples.toolkit.ui.container.NegativeMarginVerticalFieldManager;
 import com.samples.toolkit.ui.container.PillButtonSet;
 import com.samples.toolkit.ui.test.ForegroundManager;
+import com.synkron.diamondsec.connectors.InfoWareConnector;
 import com.synkron.diamondsec.connectors.MyStocksConnector;
+import com.synkron.diamondsec.utils.DataContext;
 
+import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.*;
 import net.rim.device.api.ui.container.*;
+import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.i18n.SimpleDateFormat;
 
 public class SummaryScreen extends SubScreen implements FieldChangeListener {
 	Manager _summary;
-	Manager _myStocks;
+	public Manager _myStocks;
 	Manager _bodyWrapper;
 	Manager _currentBody;
 	
@@ -35,7 +43,7 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_pillButtonSet = new PillButtonSet();
 		_pillSummary = new PillButtonField("Summary");
 		_pillMyStocks = new PillButtonField("My Stocks");
-		
+
 		_pillButtonSet.add(_pillSummary);
 		_pillButtonSet.add(_pillMyStocks);
 		_pillButtonSet.setMargin( 15, 15, 5, 15 );
@@ -44,16 +52,9 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		
 		_bodyWrapper = new NegativeMarginVerticalFieldManager( USE_ALL_WIDTH );
 		
-		_myStocks = new ListStyleButtonSet();
-		_myStocks.setChangeListener(new FieldChangeListener(){
-			public void fieldChanged(Field field, int context) {
-				String _Url = "";
-				MyStocksConnector _connector = new MyStocksConnector(_Url);
-				_connector.start();
-			}
-		});
-		//_myStocks.add(new ListStyleButtonField("Ticker", 0));
-		
+		//_myStocks = new ListStyleButtonSet();
+		_myStocks = new VerticalFieldManager();
+		_myStocks.setMargin(20,0,0,0);
 		_summary = new ListStyleButtonSet();
 		
 		GridFieldManager _grdSummary = new GridFieldManager(5,2,0); 
@@ -106,10 +107,22 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_pillMyStocks.setChangeListener(new FieldChangeListener(){
 			
 			public void fieldChanged( Field field, int context ) {
-            	if( _currentBody != _myStocks ) {
+				DataContext _dbContext = new DataContext();
+				String strCustomerId = (String)_dbContext.get("CustomerID");
+				DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+				Date date = new Date();
+				String strValueDate =  dateFormat.format(date);
+				
+				String _Url = InfoWareConnector.API_CUSTOMER_PORTFOLIO_HOLDINGS_URL;
+				_Url = _Url+strCustomerId+"|"+strValueDate;
+				MyStocksConnector _connector = new MyStocksConnector(_Url);
+				_connector.start();
+				//UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+				if( _currentBody != _myStocks ) {
 	                _bodyWrapper.replace( _currentBody, _myStocks );
 	                _currentBody = _myStocks;
             	}
+            	
             }
 		});
         foreground.add( _bodyWrapper );

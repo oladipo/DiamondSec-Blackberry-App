@@ -275,13 +275,19 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 					TIME_IN_FORCE = 0;
 					break;
 			}
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 			Date date = new Date();
 			strDateLimit =  dateFormat.format(date);
 			//build endpoint URL..
 			URL = URL + strCustomerNumber + "|"+strCSCSNumber +"|"+_theStock._ticker+
 			"|"+TRADE_ACTION+"|"+_txtFieldAmount.getText()+"|"+ORDER_TYPE+"|"+_txtFieldPrice.getText()+
 			"|"+TIME_IN_FORCE+"|"+strDateLimit;
+			
+			//base url for final trade placement....
+			String strPlaceParams = strCustomerNumber + "|"+strCSCSNumber +"|"+_theStock._ticker+
+			"|"+TRADE_ACTION+"|"+_txtFieldAmount.getText()+"|"+ORDER_TYPE+"|"+_txtFieldPrice.getText()+
+			"|"+TIME_IN_FORCE+"|"+strDateLimit;
+			
 			TradingBuyConnector _connector = new TradingBuyConnector(URL);
 			_connector.start();
 			
@@ -294,7 +300,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 			_theTrade.strLimitCondition = strLimitCondition;
 			_theTrade.strAmount = _txtFieldAmount.getText();
 			_theTrade.strDuration = (String)_objChoiceDuration.getChoice(_objChoiceDuration.getSelectedIndex());;
-			
+			_theTrade.strPlaceTradeURL = strPlaceParams;
 			diamondSec.pushScreen(new TradingConfirmationScreen(_theStock, _theTrade));
 		}
 	}
