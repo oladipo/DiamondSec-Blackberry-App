@@ -75,8 +75,8 @@ public class InfoWareConnector extends Thread{
 		_factory.setConnectionTimeout(10000);
 		_factory.setAttemptsLimit(5);
 		_factory.setTimeLimit(10000);
-		//_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("mds-public"));
-		_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("FQ2y34b6")); 
+		_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("mds-public"));
+		//_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("FQ2y34b6")); 
 		// Set ConnectionFactory options.
         if(_transports.length > 0)
         {
