@@ -21,7 +21,7 @@ import org.json.me.JSONObject;
 
 import com.samples.toolkit.ui.component.ListStyleButtonField;
 import com.synkron.diamondsec.LoginStatusScreen;
-import com.synkron.diamondsec.StockListScreen;
+
 import com.synkron.diamondsec.SummaryScreen;
 import com.synkron.diamondsec.TradingScreen;
 import com.synkron.diamondsec.entities.Stock;
@@ -69,6 +69,7 @@ public class MyStocksConnector extends InfoWareConnector{
 					SummaryScreen theScreen = (SummaryScreen)UiApplication.
 					getUiApplication().getActiveScreen();
 					
+					theScreen._myStocks.deleteAll();
     				try {
 						JSONObject obj = new JSONObject(_Result);
 						JSONArray jsonArray = obj.getJSONArray("Rows");
@@ -101,7 +102,7 @@ public class MyStocksConnector extends InfoWareConnector{
 									sb = sb + " Cost:"+ innerObj.getString("Value")+ "|";
 								}
 								if(j == 5){ 
-									sb = sb + "  Fees"+ innerObj.getString("Value")+ "|";
+									sb = sb + "  Fees:"+ innerObj.getString("Value")+ "|";
 								}
 								if(j == 7){ 
 									sb = sb + " Price Current:"+ innerObj.getString("Value")+ "|";
@@ -123,7 +124,7 @@ public class MyStocksConnector extends InfoWareConnector{
 							_dContext.set("isSaved", "false");
 							_dContext.commit();*/
 						    
-							ListStyleButtonField lsBtnField = new ListStyleButtonField(strDisplay,0){
+							ListStyleButtonField lsBtnField = new ListStyleButtonField(strDisplay,Field.USE_ALL_WIDTH ){
 								int color = Color.WHITE;
 								
 								protected void paint(Graphics graphics) {
@@ -137,7 +138,7 @@ public class MyStocksConnector extends InfoWareConnector{
 								public void fieldChanged(Field field, int context) {
 									ListStyleButtonField _myButton = (ListStyleButtonField)field;
 									String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
-									// TODO instantiate a stock entity and pass as parameter to trading screen.
+
 									Stock theStock = new Stock();
 									theStock._ticker = _txtStockCode[0];
 									theStock._name = _txtStockCode[1];
@@ -149,9 +150,7 @@ public class MyStocksConnector extends InfoWareConnector{
 
 							lsBtnField.setMargin(new XYEdges(0,20,0,20));
 							lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
-							
-							
-							
+			
 							theScreen._myStocks.add(lsBtnField);
 							
 							sb = "";
@@ -168,15 +167,11 @@ public class MyStocksConnector extends InfoWareConnector{
 			 _Result = "ERROR fetching content: " + Ex.toString();
 			 
 			 System.out.print(Ex.getMessage());
-			 
-	    		UiApplication.getUiApplication().invokeLater(new Runnable(){
-
-	    			public void run() {
-	    				StockListScreen theScreen = (StockListScreen)UiApplication.
-	    												getUiApplication().getActiveScreen();
-	    				theScreen._rtfOutput.setText(_Result);
-	    			}
-	    		});
+				synchronized(UiApplication.getEventLock()){
+					UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+						UiApplication.getUiApplication().pushScreen(
+								new LoginStatusScreen(Ex.getMessage()));
+			    }
 		}
 		finally
 		{
@@ -190,6 +185,11 @@ public class MyStocksConnector extends InfoWareConnector{
                 catch(IOException e)
                 {
                 	 System.out.print("ERROR fetching content: " + e.getMessage());
+         			synchronized(UiApplication.getEventLock()){
+        				//UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+        					UiApplication.getUiApplication().pushScreen(
+        							new LoginStatusScreen(e.getMessage()));
+        		    }
                 }
             }
 
@@ -203,6 +203,11 @@ public class MyStocksConnector extends InfoWareConnector{
                 catch(IOException e)
                 {
                 	System.out.print("ERROR fetching content: " + e.getMessage());
+        			synchronized(UiApplication.getEventLock()){
+        				//UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+        					UiApplication.getUiApplication().pushScreen(
+        							new LoginStatusScreen(e.getMessage()));
+        		    }
                 }
             }
             // Close Connection.
@@ -213,6 +218,11 @@ public class MyStocksConnector extends InfoWareConnector{
             catch(IOException ioe)
             {
             	System.out.print("ERROR fetching content: " + ioe.getMessage());
+    			synchronized(UiApplication.getEventLock()){
+    				//UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+    					UiApplication.getUiApplication().pushScreen(
+    							new LoginStatusScreen(ioe.getMessage()));
+    		    }
             }
 		}
 	}

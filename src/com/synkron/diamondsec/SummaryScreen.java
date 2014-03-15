@@ -3,24 +3,21 @@ package com.synkron.diamondsec;
 import java.util.Date;
 
 import com.samples.toolkit.ui.component.PillButtonField;
-import com.samples.toolkit.ui.container.ListStyleButtonSet;
 import com.samples.toolkit.ui.container.NegativeMarginVerticalFieldManager;
 import com.samples.toolkit.ui.container.PillButtonSet;
 import com.samples.toolkit.ui.test.ForegroundManager;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
+import com.synkron.diamondsec.connectors.MyAccountConnector;
 import com.synkron.diamondsec.connectors.MyStocksConnector;
 import com.synkron.diamondsec.utils.DataContext;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.ui.*;
-import net.rim.device.api.ui.component.*;
 import net.rim.device.api.ui.container.*;
-import net.rim.device.api.i18n.DateFormat;
-import net.rim.device.api.i18n.SimpleDateFormat;
 
 public class SummaryScreen extends SubScreen implements FieldChangeListener {
-	Manager _summary;
+	public Manager _summary;
 	public Manager _myStocks;
 	Manager _bodyWrapper;
 	Manager _currentBody;
@@ -30,6 +27,8 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 	PillButtonField _pillMyStocks;
 	
 	CustomButtonField btnLogOff, btnMyAccount;
+	DataContext _dbContext;
+	String strCustomerId;
 	
 	public SummaryScreen() {
 
@@ -39,6 +38,9 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_hManager.add(new CustomButtonField("My Account", Color.DARKBLUE));
 		
 		Manager foreground = new ForegroundManager();
+		
+		_dbContext = new DataContext();
+		strCustomerId = (String)_dbContext.get("CustomerID");
 		
 		_pillButtonSet = new PillButtonSet();
 		_pillSummary = new PillButtonField("Summary");
@@ -55,39 +57,8 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		//_myStocks = new ListStyleButtonSet();
 		_myStocks = new VerticalFieldManager();
 		_myStocks.setMargin(20,0,0,0);
-		_summary = new ListStyleButtonSet();
-		
-		GridFieldManager _grdSummary = new GridFieldManager(5,2,0); 
-		_grdSummary.add(new LabelField("Cash Balance"));
-		_grdSummary.add(new LabelField("9,999,999.00"));
-		_grdSummary.add(new LabelField("Equities"));
-		_grdSummary.add(new LabelField("4,254,545.00"));
-		_grdSummary.add(new LabelField("Fixed Income"));
-		_grdSummary.add(new LabelField("2,343,543.00"));
-		_grdSummary.add(new LabelField("Real Estate"));
-		_grdSummary.add(new LabelField("20,324,665.00"));
-		_grdSummary.add(new LabelField("Portfolio Value"));
-		_grdSummary.add(new LabelField("5,545,566.21"));
-		
-		_grdSummary.setColumnPadding(20);
-		_grdSummary.setRowPadding(20);
-		_grdSummary.setMargin(0, 0, 20, 0);
-		
-		_summary.add(_grdSummary);
-		
-		GridFieldManager _grdSubSummary = new GridFieldManager(2,2,0); 
-		_grdSubSummary.add(new LabelField("Funds Available for Trading"));
-		_grdSubSummary.add(new LabelField("1,334,245.00"));
-		_grdSubSummary.add(new LabelField("Margin Allowed"), Field.FIELD_LEFT);
-		_grdSubSummary.add(new LabelField("4,254,545.00"));
-		
-		_grdSubSummary.setColumnPadding(20);
-		_grdSubSummary.setRowPadding(20);
-		_grdSubSummary.setMargin(0, 0, 20, 0);
-		
-		_summary.add(_grdSubSummary);
-		
-		//_summary.add(new ListStyleButtonField("Cash Balance",0));
+		_summary = new VerticalFieldManager(USE_ALL_HEIGHT |USE_ALL_WIDTH);
+		_summary.setMargin(0,0,0,0);
 		
 		_pillButtonSet.setSelectedField(_pillSummary);
 		
@@ -97,7 +68,10 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_pillSummary.setChangeListener(	new FieldChangeListener(){
 			
 			public void fieldChanged( Field field, int context ) {
-            	if( _currentBody != _summary ) {
+
+				loadAccountSummary();
+				
+				if( _currentBody != _summary ) {
 	                _bodyWrapper.replace( _currentBody, _summary );
 	                _currentBody = _summary;
             	}
@@ -107,8 +81,6 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_pillMyStocks.setChangeListener(new FieldChangeListener(){
 			
 			public void fieldChanged( Field field, int context ) {
-				DataContext _dbContext = new DataContext();
-				String strCustomerId = (String)_dbContext.get("CustomerID");
 				DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 				Date date = new Date();
 				String strValueDate =  dateFormat.format(date);
@@ -125,6 +97,7 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
             	
             }
 		});
+		loadAccountSummary();
         foreground.add( _bodyWrapper );
         add( foreground );
         
@@ -141,4 +114,10 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		}
 	}
 
+	public void loadAccountSummary(){
+		String _Url = InfoWareConnector.API_CUSTOMER_ACCOUNT_SUMMARY_URL;
+		_Url = _Url+strCustomerId;
+		MyAccountConnector _connector = new MyAccountConnector(_Url);
+		_connector.start();
+	}
 }

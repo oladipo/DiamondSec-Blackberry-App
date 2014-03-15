@@ -35,6 +35,9 @@ public class StockListConnector extends InfoWareConnector{
 	}
 	
 	public void run(){
+		synchronized(UiApplication.getEventLock()){
+			UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+		}
 		OutputStream oStream = null;
 		InputStream iStream = null;
 			try{	
@@ -55,6 +58,9 @@ public class StockListConnector extends InfoWareConnector{
             _Result = new String(data);
             
             //System.out.print(_Result);
+            synchronized(UiApplication.getEventLock()){
+            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+            }
             
     		UiApplication.getUiApplication().invokeLater(new Runnable(){
 
@@ -138,14 +144,10 @@ public class StockListConnector extends InfoWareConnector{
 							
 							sb = "";
 						}
-						theScreen._rtfOutput.setText("");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						theScreen._rtfOutput.setText(e.getMessage());
 					}
-    				
-    				//theScreen._rtfOutput.setText(_Result);
     			}
     		});
             
@@ -153,16 +155,11 @@ public class StockListConnector extends InfoWareConnector{
 			 _Result = "ERROR fetching content: " + Ex.toString();
 			 
 			 System.out.print(Ex.getMessage());
-			 
-	    		UiApplication.getUiApplication().invokeLater(new Runnable(){
-
-	    			public void run() {
-	    				StockListScreen theScreen = (StockListScreen)UiApplication.
-	    												getUiApplication().getActiveScreen();
-	    				theScreen._rtfOutput.setText(_Result);
-	    			}
-	    		});
-	            
+				synchronized(UiApplication.getEventLock()){
+					UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+						UiApplication.getUiApplication().pushScreen(
+								new LoginStatusScreen(Ex.getMessage()));
+			    }
 		}
 		finally
 		{
@@ -176,6 +173,11 @@ public class StockListConnector extends InfoWareConnector{
                 catch(IOException e)
                 {
                 	 System.out.print("ERROR fetching content: " + e.getMessage());
+     				synchronized(UiApplication.getEventLock()){
+    					UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+    						UiApplication.getUiApplication().pushScreen(
+    								new LoginStatusScreen(e.getMessage()));
+    			    }
                 }
             }
 
@@ -189,6 +191,12 @@ public class StockListConnector extends InfoWareConnector{
                 catch(IOException e)
                 {
                 	System.out.print("ERROR fetching content: " + e.getMessage());
+    				synchronized(UiApplication.getEventLock()){
+    					UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+    						UiApplication.getUiApplication().pushScreen(
+    								new LoginStatusScreen(e.getMessage()));
+    			    }
+    				
                 }
             }
             // Close Connection.
@@ -199,6 +207,11 @@ public class StockListConnector extends InfoWareConnector{
             catch(IOException ioe)
             {
             	System.out.print("ERROR fetching content: " + ioe.getMessage());
+				synchronized(UiApplication.getEventLock()){
+					UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+						UiApplication.getUiApplication().pushScreen(
+								new LoginStatusScreen(ioe.getMessage()));
+			    }
             }
 		}
 		

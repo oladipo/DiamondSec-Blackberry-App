@@ -18,7 +18,6 @@ public class StockListScreen extends SubScreen {
 	CustomButtonField _btnSearch;
 	
 	HorizontalFieldManager _hSearchManager;
-	public RichTextField _rtfOutput;
 	
 	public StockListScreen() {
 		super();
@@ -26,14 +25,14 @@ public class StockListScreen extends SubScreen {
 		
 		super.setupStatusCommands();
 		_btnStocksList.setFocus();
-		_hSearchManager = new HorizontalFieldManager(Field.FIELD_VCENTER | Manager.USE_ALL_WIDTH);
+		_hSearchManager = new HorizontalFieldManager();
 		
 		_lblSearch = new LabelField("Search");
 		_lblSearch.setMargin(30,5,0,10);
 		
-		_txtSearch = new EditField(Field.FIELD_LEADING | TextField.NO_NEWLINE | USE_ALL_WIDTH);
+		_txtSearch = new EditField(Field.FIELD_LEADING | TextField.NO_NEWLINE);
 		_txtSearch.setBorder(BorderFactory.createSimpleBorder(new XYEdges(2,2,2,2)));
-		_txtSearch.setMargin(20,5,0,0);
+		_txtSearch.setMargin(20,5,20,0);
 		_txtSearch.setPadding(10,10,10,10);
 		_txtSearch.setBackground(BackgroundFactory.createSolidBackground(Color.WHITE));
 		
@@ -44,13 +43,8 @@ public class StockListScreen extends SubScreen {
 		_hSearchManager.add(_lblSearch);
 		_hSearchManager.add(_txtSearch);
 		_hSearchManager.add(_btnSearch);
-		
-		_rtfOutput = new RichTextField();
-		_rtfOutput.setText("Retrieving data. Please wait...");
 
 		add(_hSearchManager);
-
-		add(_rtfOutput);
 		
 		getStockList();
 	}
