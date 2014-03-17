@@ -25,7 +25,6 @@ import com.synkron.diamondsec.LoginStatusScreen;
 import com.synkron.diamondsec.SummaryScreen;
 import com.synkron.diamondsec.TradingScreen;
 import com.synkron.diamondsec.entities.Stock;
-import com.synkron.diamondsec.utils.DataContext;
 import com.synkron.diamondsec.utils.SplitString;
 
 public class MyStocksConnector extends InfoWareConnector{

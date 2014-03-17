@@ -84,6 +84,14 @@ public class SubScreen extends BaseScreen {
 			
 		});
 		_btnOrderSummary = new CustomButtonField("Order Inquiry", Color.DARKBLUE);
+		_btnOrderSummary.setChangeListener(new FieldChangeListener(){
+
+			public void fieldChanged(Field field, int context) {
+				UiApplication diamondSec = UiApplication.getUiApplication();
+					diamondSec.pushScreen(new OrderHistoryScreen());
+			}
+			
+		});
 		
 			_hStatusManager.add(_btnMyAccount);
 			_hStatusManager.add(_btnStocksList);

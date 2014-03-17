@@ -3,10 +3,19 @@ package com.synkron.diamondsec.connectors;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.microedition.io.InputConnection;
 import javax.microedition.io.OutputConnection;
 
+import net.rim.device.api.database.Database;
+import net.rim.device.api.database.DatabaseException;
+import net.rim.device.api.database.DatabaseFactory;
+import net.rim.device.api.database.DatabaseIOException;
+import net.rim.device.api.database.DatabasePathException;
+import net.rim.device.api.database.Statement;
+import net.rim.device.api.i18n.SimpleDateFormat;
+import net.rim.device.api.io.http.HttpDateParser;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
@@ -25,6 +34,7 @@ import com.synkron.diamondsec.StockListScreen;
 import com.synkron.diamondsec.TradingScreen;
 import com.synkron.diamondsec.entities.Stock;
 import com.synkron.diamondsec.utils.DataContext;
+import com.synkron.diamondsec.utils.MarketDatabase;
 import com.synkron.diamondsec.utils.SplitString;
 
 public class StockListConnector extends InfoWareConnector{
@@ -68,12 +78,16 @@ public class StockListConnector extends InfoWareConnector{
     				
     				StockListScreen theScreen = (StockListScreen)UiApplication.
     												getUiApplication().getActiveScreen();
+    				MarketDatabase _myDb = new MarketDatabase();
+    				_myDb.DeleteStocks();
+    				theScreen._vManager.deleteAll();
     				try {
 						JSONObject obj = new JSONObject(_Result);
 						JSONArray jsonArray = obj.getJSONArray("Rows");
 						
 						String sb = "";
 						int backColor = Color.DARKBLUE;
+						
 						
 						for(int i = 0; i < jsonArray.length(); i++){
 							//add a field to the screen..
@@ -107,12 +121,10 @@ public class StockListConnector extends InfoWareConnector{
 								}
 							}
 							String strDisplay = sb.replace('|', ' ');
-							//TODO Store records in a repository and set flags to indicate data has been
-							//previously stored, checked storage expiration to refresh data store.
+
+							String _txtStockCode[] = SplitString.split(sb,"|");
+							_myDb.InsertStock(_txtStockCode[0], _txtStockCode[1], _txtStockCode[2].trim(), _txtStockCode[3]);
 							
-							DataContext _dContext = new DataContext();
-							_dContext.set("isSaved", "false");
-							_dContext.commit();
 							ListStyleButtonField lsBtnField = new ListStyleButtonField(strDisplay,0){
 								int color = Color.WHITE;
 								
@@ -128,7 +140,6 @@ public class StockListConnector extends InfoWareConnector{
 								public void fieldChanged(Field field, int context) {
 									ListStyleButtonField _myButton = (ListStyleButtonField)field;
 									String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
-									// TODO instantiate a stock entity and pass as parameter to trading screen.
 									Stock theStock = new Stock();
 									theStock._ticker = _txtStockCode[0];
 									theStock._name = _txtStockCode[1];
@@ -140,7 +151,7 @@ public class StockListConnector extends InfoWareConnector{
 
 							lsBtnField.setMargin(new XYEdges(0,20,0,20));
 							lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
-							theScreen.add(lsBtnField);
+							theScreen._vManager.add(lsBtnField);
 							
 							sb = "";
 						}
@@ -148,6 +159,16 @@ public class StockListConnector extends InfoWareConnector{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					_myDb.Close();
+					Date date = new Date();
+					SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+					
+					DataContext _dContext = new DataContext();
+					_dContext.set("isSaved", "true");
+					_dContext.set("savedDate", formatter.format(date));
+					_dContext.commit();
+					
     			}
     		});
             
