@@ -1,14 +1,18 @@
 package com.synkron.diamondsec;
 
+import java.util.Date;
+
 import com.synkron.diamondsec.connectors.InfoWareConnector;
 import com.synkron.diamondsec.connectors.TradingConfirmationConnector;
 import com.synkron.diamondsec.entities.*;
+import com.synkron.diamondsec.utils.URLUTF8Encoder;
 
+import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.Manager;
-import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.component.*;
 import net.rim.device.api.ui.container.*;
@@ -29,6 +33,7 @@ public class TradingConfirmationScreen extends SubScreen {
 	
 	TextField _txtPIN; 
 	CustomButtonField _btnSubmit;
+	String strEffectiveDate, strInstructions;
 	
 	public TradingConfirmationScreen(Stock theStock, Trade theTrade) {
 		this();
@@ -41,6 +46,12 @@ public class TradingConfirmationScreen extends SubScreen {
 		super();
 		_hManager.add(new CustomButtonField("Trading", Color.DARKBLUE));
 		setupStatusCommands();
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+		Date date = new Date();
+		
+		strEffectiveDate = dateFormat.format(date);;
+		strInstructions = "Kindly Effect the Trade";
 	}
 
 	public void SetupConfirmationFields()
@@ -165,8 +176,12 @@ public class TradingConfirmationScreen extends SubScreen {
 		_btnSubmit = new CustomButtonField("Confirm",Color.LIGHTGREEN);
 		_btnSubmit.setChangeListener(new FieldChangeListener(){
 			public void fieldChanged(Field field, int context) {
+				
+				strInstructions = URLUTF8Encoder.encode(strInstructions);
 				String _Url = InfoWareConnector.API_PLACE_TRADE_ORDER_URL;
-				_Url = _Url+_txtPIN.getText()+"|"+_theTrade.strPlaceTradeURL;
+				_Url = _Url+_txtPIN.getText()+"|"+_theTrade.strPlaceTradeURL+"|"+strEffectiveDate+"|"+strInstructions;
+				
+
 				TradingConfirmationConnector _connector = new TradingConfirmationConnector(_Url);
 				_connector.start();
 			}

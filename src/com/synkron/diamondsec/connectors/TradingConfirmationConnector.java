@@ -13,8 +13,9 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import com.synkron.diamondsec.StockListScreen;
+import com.synkron.diamondsec.LoginStatusScreen;
 import com.synkron.diamondsec.TradingStatusScreen;
+import com.synkron.diamondsec.utils.SplitString;
 
 public class TradingConfirmationConnector extends InfoWareConnector{
 
@@ -24,6 +25,9 @@ public class TradingConfirmationConnector extends InfoWareConnector{
 	}
 
 	public void run(){
+		synchronized(UiApplication.getEventLock()){
+			UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+		}
 		OutputStream oStream = null;
 		InputStream iStream = null;
 			try{	
@@ -45,6 +49,9 @@ public class TradingConfirmationConnector extends InfoWareConnector{
             
             System.out.print(_Result);
             
+            synchronized(UiApplication.getEventLock()){
+            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+            }
     		UiApplication.getUiApplication().invokeLater(new Runnable(){
 
     			public void run() {
@@ -52,7 +59,7 @@ public class TradingConfirmationConnector extends InfoWareConnector{
     				try {
 						JSONObject obj = new JSONObject(_Result);
 						JSONArray jsonArray = obj.getJSONArray("Rows");
-						
+						String sb = "";
 						for(int i = 0; i < jsonArray.length(); i++){
 							//add a field to the screen..
 							JSONArray inner  = jsonArray.getJSONArray(i);
@@ -61,9 +68,30 @@ public class TradingConfirmationConnector extends InfoWareConnector{
 								JSONObject innerObj = inner.getJSONObject(j);
 								
 								System.out.println(innerObj.getString("Value"));
+								//Error Status
+								if(j == 19){
+									sb = sb +innerObj.getString("Value")+ "|";
+								}
+								//Error Message
+								if(j == 20){
+									sb = sb +innerObj.getString("Value")+ "|";								
+								}
+								//Success Fail
+								if(j == 21){
+									sb = sb +innerObj.getString("Value")+ "|";
+								}
 							}					
 						}
-						UiApplication.getUiApplication().pushScreen(new TradingStatusScreen());
+						
+						String _responseParams[] = SplitString.split(sb,"|");
+						String strMessage = "";
+						if(_responseParams[0] == "False"){}
+						if(!_responseParams[1].equals(" ") ){
+							strMessage = _responseParams[1];
+						}
+						if(_responseParams[2] == "False"){}
+						
+						UiApplication.getUiApplication().pushScreen(new TradingStatusScreen(strMessage));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

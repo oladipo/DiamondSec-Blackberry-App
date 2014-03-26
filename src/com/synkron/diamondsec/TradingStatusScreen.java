@@ -12,14 +12,16 @@ public class TradingStatusScreen extends SubScreen implements FieldChangeListene
 	VerticalFieldManager _vManager;
 	CustomLabelField _lblOrderStatus;
 	
-	public TradingStatusScreen() {
+	public TradingStatusScreen(String strMessage) {
 		super();
 		_hManager.add(new CustomButtonField("Trade",Color.DARKBLUE));
 		setupStatusCommands();
-		
+		if(strMessage.equals(" ")){
+			strMessage = "Your Order is Sucessfully Accepted!"; 
+		}
 		_vManager = new VerticalFieldManager(USE_ALL_WIDTH | Manager.FIELD_HCENTER);
 		
-		_lblOrderStatus = new CustomLabelField("Your Order is Sucessfully Accepted!",FIELD_HCENTER);
+		_lblOrderStatus = new CustomLabelField(strMessage,FIELD_HCENTER);
 		_lblOrderStatus.setFontColor(Color.WHITE);
 		_lblOrderStatus.setMargin(20,20,5,20);
 		
@@ -32,7 +34,7 @@ public class TradingStatusScreen extends SubScreen implements FieldChangeListene
 		_btnStockList.setChangeListener(this);
 		
 		_btnOrderHistory = new CustomButtonField("Check Order History", Color.LIGHTGREEN, CustomButtonField.THREE_FOURTH_SCREEN_WIDTH);
-		_btnOrderHistory.setMargin(40, 0, 0, 0);
+		_btnOrderHistory.setMargin(40, 0, 40, 0);
 		_btnOrderHistory.setChangeListener(this);
 		
 		_vManager.add(_lblOrderStatus);
@@ -47,6 +49,9 @@ public class TradingStatusScreen extends SubScreen implements FieldChangeListene
 		UiApplication diamondSec = UiApplication.getUiApplication();
 		if(field == _btnStockList){
 			diamondSec.pushScreen(new StockListScreen());
+		}
+		if(field == _btnOrderHistory){
+			diamondSec.pushScreen(new OrderHistoryScreen());
 		}
 	}
 

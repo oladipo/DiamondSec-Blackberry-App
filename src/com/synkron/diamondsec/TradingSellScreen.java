@@ -280,10 +280,11 @@ public class TradingSellScreen extends SubScreen implements FieldChangeListener{
 				DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 				Date date = new Date();
 				strDateLimit =  dateFormat.format(date);
+				String strEffectiveDate = dateFormat.format(date);
 				//build endpoint URL..
 				URL = URL + strCustomerNumber + "|"+strCSCSNumber +"|"+theStock._ticker+
 				"|"+TRADE_ACTION+"|"+_txtFieldAmount.getText()+"|"+ORDER_TYPE+"|"+_txtFieldPrice.getText()+
-				"|"+TIME_IN_FORCE+"|"+strDateLimit;
+				"|"+TIME_IN_FORCE+"|"+strDateLimit+"|"+strEffectiveDate;;
 				
 				//base url for final trade placement....
 				String strPlaceParams = strCustomerNumber + "|"+strCSCSNumber +"|"+theStock._ticker+

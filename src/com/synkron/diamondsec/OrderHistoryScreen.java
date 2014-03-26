@@ -3,12 +3,10 @@ package com.synkron.diamondsec;
 import java.util.Date;
 
 import com.samples.toolkit.ui.component.PillButtonField;
-import com.samples.toolkit.ui.container.ListStyleButtonSet;
 import com.samples.toolkit.ui.container.NegativeMarginVerticalFieldManager;
 import com.samples.toolkit.ui.container.PillButtonSet;
 import com.samples.toolkit.ui.test.ForegroundManager;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
-import com.synkron.diamondsec.connectors.MyStocksConnector;
 import com.synkron.diamondsec.connectors.OrderHistoryConnector;
 import com.synkron.diamondsec.utils.DataContext;
 

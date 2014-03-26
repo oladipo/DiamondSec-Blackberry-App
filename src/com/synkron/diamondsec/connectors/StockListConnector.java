@@ -8,14 +8,7 @@ import java.util.Date;
 import javax.microedition.io.InputConnection;
 import javax.microedition.io.OutputConnection;
 
-import net.rim.device.api.database.Database;
-import net.rim.device.api.database.DatabaseException;
-import net.rim.device.api.database.DatabaseFactory;
-import net.rim.device.api.database.DatabaseIOException;
-import net.rim.device.api.database.DatabasePathException;
-import net.rim.device.api.database.Statement;
 import net.rim.device.api.i18n.SimpleDateFormat;
-import net.rim.device.api.io.http.HttpDateParser;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
