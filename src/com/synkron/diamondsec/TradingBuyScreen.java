@@ -178,8 +178,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 		_txtFieldPrice.setBackground(BackgroundFactory.createSolidBackground(Color.WHITE));
 		
 		_txtFieldAmount = new TextField(Field.FIELD_LEADING | TextField.NO_NEWLINE);
-		_txtFieldPrice.setFilter(TextFilter.get(TextFilter.REAL_NUMERIC));
-		
+		_txtFieldAmount.setFilter(TextFilter.get(TextFilter.REAL_NUMERIC));
 		_txtFieldAmount.setMaxSize(10);
 		_txtFieldAmount.setBorder(BorderFactory.createSimpleBorder(new XYEdges(2,2,2,2)));
 		_txtFieldAmount.setMargin(20,10,0,0);
