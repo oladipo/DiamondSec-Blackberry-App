@@ -85,12 +85,16 @@ public class TradingConfirmationConnector extends InfoWareConnector{
 						
 						String _responseParams[] = SplitString.split(sb,"|");
 						String strMessage = "";
-						if(_responseParams[0] == "False"){}
-						if(!_responseParams[1].equals(" ") ){
+						if(_responseParams[0].toString().equals("False") && _responseParams[2].toString().equals("True")){
+							//Trade request was successful..
+							strMessage = "Your order was successfully accepted!";
+						}
+						if(!(_responseParams[1].toString().length() == 0)){
 							strMessage = _responseParams[1];
 						}
-						if(_responseParams[2] == "False"){}
-						
+						if(_responseParams[2].toString().equals("False")){
+
+						}
 						UiApplication.getUiApplication().pushScreen(new TradingStatusScreen(strMessage));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
