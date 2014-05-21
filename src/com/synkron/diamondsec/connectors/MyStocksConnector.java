@@ -74,13 +74,14 @@ public class MyStocksConnector extends InfoWareConnector{
 						JSONArray jsonArray = obj.getJSONArray("Rows");
 						
 						String sb = "";
+						String strDisplay = "";
 						int backColor = Color.DARKBLUE;
 	    				
 						for(int i = 0; i < jsonArray.length(); i++){
 							//add a field to the screen..
 							JSONArray inner  = jsonArray.getJSONArray(i);
 							if(i % 2 == 0){
-								backColor = Color.LIGHTBLUE;
+								backColor = Color.CORNFLOWERBLUE;
 							}else{
 								backColor = Color.DARKBLUE;
 							}
@@ -90,8 +91,17 @@ public class MyStocksConnector extends InfoWareConnector{
 								
 								System.out.println(innerObj.getString("Value"));
 								//add a new line
+								if(j == 0){
+									sb = sb + innerObj.getString("Value");
+									strDisplay = strDisplay +"Ticker: ["+innerObj.getString("Value")+"]";
+								}
+								if(j == 1){
+									sb = sb + "|"+ innerObj.getString("Value");
+									strDisplay = strDisplay +"\nStock: "+innerObj.getString("Value");
+								}
 								if(j == 2){
 									sb = sb + "|\nAmount:"+innerObj.getString("Value");
+									strDisplay = strDisplay +"\nUnits: "+innerObj.getString("Value");
 								}
 								//add a label for price
 								if(j == 3){
@@ -102,21 +112,16 @@ public class MyStocksConnector extends InfoWareConnector{
 								}
 								if(j == 5){ 
 									sb = sb + "  Fees:"+ innerObj.getString("Value")+ "|";
+								}								
+								if(j == 6){ 
+									sb = sb + " Market Value:"+ innerObj.getString("Value")+ "|";
 								}
 								if(j == 7){ 
 									sb = sb + " Price Current:"+ innerObj.getString("Value")+ "|";
 								}
-								if(j == 6){ 
-									sb = sb + " Market Value:"+ innerObj.getString("Value")+ "|";
-								}
-								if(j == 1){
-									sb = sb + "|"+ innerObj.getString("Value");
-								}
-								if(j == 0){
-									sb = sb + innerObj.getString("Value");
-								}
+
+
 							}
-							String strDisplay = sb.replace('|', ' ');
 							//previously stored, checked storage expiration to refresh data store.
 							
 							/*DataContext _dContext = new DataContext();
@@ -153,6 +158,7 @@ public class MyStocksConnector extends InfoWareConnector{
 							theScreen._myStocks.add(lsBtnField);
 							
 							sb = "";
+							strDisplay = "";
 						}
 						
 					} catch (JSONException e) {

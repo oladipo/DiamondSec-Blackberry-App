@@ -73,7 +73,7 @@ public class OrderHistoryConnector extends InfoWareConnector{
 										//add a field to the screen..
 										JSONArray inner  = jsonArray.getJSONArray(i);
 										if(i % 2 == 0){
-											backColor = Color.LIGHTBLUE;
+											backColor = Color.CORNFLOWERBLUE;
 										}else{
 											backColor = Color.DARKBLUE;
 										}

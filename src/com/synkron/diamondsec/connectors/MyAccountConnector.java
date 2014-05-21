@@ -11,6 +11,7 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
@@ -22,6 +23,7 @@ import net.rim.device.api.ui.decor.BackgroundFactory;
 
 import com.synkron.diamondsec.LoginStatusScreen;
 import com.synkron.diamondsec.SummaryScreen;
+import com.synkron.diamondsec.utils.DataContext;
 public class MyAccountConnector extends InfoWareConnector{
 
 	public MyAccountConnector(String Url) {
@@ -68,14 +70,23 @@ public class MyAccountConnector extends InfoWareConnector{
 			            			_grdSummary.setBackground(BackgroundFactory.createSolidBackground(Color.LIGHTBLUE));
 			            			
 			            			GridFieldManager _grdSubSummary = new GridFieldManager(2,2,Field.USE_ALL_WIDTH); 
-			            			_grdSubSummary.setColumnPadding(20);
+			            			_grdSubSummary.setColumnPadding(10);
 			            			_grdSubSummary.setRowPadding(20);
-			            			_grdSubSummary.setMargin(10, 50, 20, 50);
+			            			_grdSubSummary.setMargin(10, 50, 0, 50);
 			            			_grdSubSummary.setBackground(BackgroundFactory.createSolidBackground(Color.DARKBLUE));
+			            			
+			            			GridFieldManager _grdTotal = new GridFieldManager(2,2,Field.USE_ALL_WIDTH); 
+			            			_grdTotal.setColumnPadding(20);
+			            			_grdTotal.setRowPadding(15);
+			            			_grdTotal.setMargin(0, 50, 20, 50);
+			            			_grdTotal.setBackground(BackgroundFactory.createSolidBackground(Color.DARKBLUE));
 			            			
 									JSONObject obj = new JSONObject(_Result);
 									JSONArray jsonArray = obj.getJSONArray("Rows");
 
+				            		double _total = 0; 
+				            		double _fundsAvailable = 0;
+				            		
 									for(int i = 0; i < jsonArray.length(); i++){
 										//add a field to the screen..
 										JSONArray inner  = jsonArray.getJSONArray(i);
@@ -84,31 +95,9 @@ public class MyAccountConnector extends InfoWareConnector{
 											JSONObject innerObj = inner.getJSONObject(j);
 											
 											System.out.println(innerObj.getString("Value"));
-											if(j == 8){
-												_grdSummary.add(new LabelField("Real Estate", Field.FIELD_LEFT){
-													public void paint(Graphics graphics) {
-											            graphics.setColor(Color.WHITE);
-											            super.paint(graphics);  
-											        }
-												});
-												_grdSummary.add(new LabelField(""){
-													public void paint(Graphics graphics) {
-											            graphics.setColor(Color.WHITE);
-											            super.paint(graphics);  
-											        }
-												});
-												_grdSummary.add(new LabelField("Portfolio Value", Field.FIELD_LEFT){
-													public void paint(Graphics graphics) {
-											            graphics.setColor(Color.WHITE);
-											            super.paint(graphics);  
-											        }
-												});
-												_grdSummary.add(new LabelField(innerObj.getString("Value")){
-													public void paint(Graphics graphics) {
-											            graphics.setColor(Color.WHITE);
-											            super.paint(graphics);  
-											        }
-												});
+											
+											if(j == 6){
+												_fundsAvailable += innerObj.getDouble("Value");
 											}
 											if(j == 7){
 												_grdSummary.add(new LabelField("Cash Balance", Field.FIELD_LEFT){
@@ -123,7 +112,12 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
-												_grdSummary.add(new LabelField("Equities", Field.FIELD_LEFT){
+												
+												_total = _total + innerObj.getDouble("Value");
+												_fundsAvailable += innerObj.getDouble("Value");
+											}
+											if(j == 8){
+												_grdSummary.add(new LabelField("Real Estate", Field.FIELD_LEFT){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -135,15 +129,59 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
-											}
-											if(j == 10){
-												_grdSubSummary.add(new LabelField("Funds Available for Trading", Field.FIELD_LEFT){
+												_grdSummary.add(new LabelField("Equities", Field.FIELD_LEFT){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
 											        }
 												});
-												_grdSubSummary.add(new LabelField(""){
+												_grdSummary.add(new LabelField(innerObj.getString("Value")){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+												});
+												
+												_total = _total + innerObj.getDouble("Value");
+												
+												/*_grdSummary.add(new LabelField("Portfolio Value", Field.FIELD_LEFT){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+												});
+												_grdSummary.add(new LabelField(innerObj.getString("Value")){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+												});*/
+											}
+											if(j == 9){
+												_fundsAvailable += innerObj.getDouble("Value");
+											}
+											if(j == 10){
+												_fundsAvailable += innerObj.getDouble("Value");
+												
+												_grdSubSummary.add(new LabelField("Funds Available for Trading", Field.FIELD_LEFT){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+													
+													protected void layout(int width, int height) {
+												        super.layout(width, height);
+												        this.setExtent(Display.getWidth()/3, this.getHeight());
+												    }
+												    public int getPreferredWidth() {
+												    	return Display.getWidth()/3;
+												    }
+												    
+												    public int getPreferredHeight() {
+												    	return this.getHeight();
+												    }
+												});
+												_grdSubSummary.add(new LabelField(String.valueOf(_fundsAvailable)){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -156,7 +194,22 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
-												_grdSubSummary.add(new LabelField(innerObj.getString("Value")){
+												_grdSubSummary.add(new LabelField(innerObj.getString("Value"),Field.FIELD_LEFT){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+												});
+												
+												_total = _total + innerObj.getDouble("Value");
+												
+												_grdTotal.add(new LabelField("Total ", Field.FIELD_LEFT){
+													public void paint(Graphics graphics) {
+											            graphics.setColor(Color.WHITE);
+											            super.paint(graphics);  
+											        }
+												});
+												_grdTotal.add(new LabelField(String.valueOf(_total),Field.FIELD_LEFT){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -176,16 +229,19 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
+												_total = _total + innerObj.getDouble("Value");
 											}
 										}
 										//previously stored, checked storage expiration to refresh data store.
 										
-										/*DataContext _dContext = new DataContext();
-										_dContext.set("isSaved", "false");
-										_dContext.commit();*/
+										DataContext _dContext = new DataContext();
+										_dContext.set("funds", String.valueOf(_fundsAvailable));
+										_dContext.commit();
+										
 										theScreen._summary.deleteAll();
 										theScreen._summary.add(_grdSummary);
 										theScreen._summary.add(_grdSubSummary);
+										theScreen._summary.add(_grdTotal);
 									}
 									
 								} catch (JSONException e) {

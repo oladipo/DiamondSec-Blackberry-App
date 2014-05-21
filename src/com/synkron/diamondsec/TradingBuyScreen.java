@@ -11,6 +11,7 @@ import com.synkron.diamondsec.utils.DataContext;
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.system.Bitmap;
+import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.ObjectChoiceField;
 import net.rim.device.api.ui.component.TextField;
@@ -35,6 +36,7 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 	
 	ObjectChoiceField _objChoiceDuration;
 	Stock _theStock;
+	DataContext _dbContext = new DataContext();
 	
 	public TradingBuyScreen(Stock theStock) {
 		this();
@@ -98,17 +100,29 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 		_lblPriceCurrent.setMargin(20,0,0,20);
 		_lblPriceCurrent.setText(_theStock._currentPrice);
 
-		_lblFundsAvailable = new CustomLabelField();
+		_lblFundsAvailable = new CustomLabelField(){
+			protected void layout(int width, int height) {
+		        super.layout(width, height);
+		        this.setExtent(Display.getWidth()/3, this.getHeight());
+		    }
+		    public int getPreferredWidth() {
+		    	return Display.getWidth()/3;
+		    }
+		    
+		    public int getPreferredHeight() {
+		    	return this.getHeight();
+		    }
+		};
 		_lblFundsAvailable.setFontColor(Color.WHITE);
 		//_lblFundsAvailable.setFont(font);
-		_lblFundsAvailable.setMargin(20,5,0,20);
-		_lblFundsAvailable.setText("Funds Available \nfor Trading");
+		_lblFundsAvailable.setMargin(20,5,10,20);
+		_lblFundsAvailable.setText("Funds Available for Trading");
 		
 		_lblAvailableFunds = new CustomLabelField();
 		_lblAvailableFunds.setFontColor(Color.WHITE);
 		//_lblAvailableFunds.setFont(font);
 		_lblAvailableFunds.setMargin(20,10,0,0);
-		_lblAvailableFunds.setText("9,999.00");
+		_lblAvailableFunds.setText(_dbContext.get("funds"));
 		
 		_lblAmount = new CustomLabelField();
 		_lblAmount.setFontColor(Color.WHITE);
@@ -250,7 +264,6 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 				strLimitCondition  = "Closing";
 			}
 			//get Customer Number..
-			DataContext _dbContext = new DataContext();
 			String strCustomerNumber,strCSCSNumber;
 			strCustomerNumber = (String)_dbContext.get("CustomerID");
 			strCSCSNumber = (String)_dbContext.get("CSCS Number");

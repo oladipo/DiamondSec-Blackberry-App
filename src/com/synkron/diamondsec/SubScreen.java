@@ -83,7 +83,7 @@ public class SubScreen extends BaseScreen {
 			}
 			
 		});
-		_btnOrderSummary = new CustomButtonField("Order Inquiry", Color.DARKBLUE);
+		_btnOrderSummary = new CustomButtonField("Order History", Color.DARKBLUE);
 		_btnOrderSummary.setChangeListener(new FieldChangeListener(){
 
 			public void fieldChanged(Field field, int context) {
