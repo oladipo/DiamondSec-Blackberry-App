@@ -111,7 +111,7 @@ public class MarketDatabase {
 	
 	public void DeleteStocks(){
 		try {
-			_deleteStatement = _myDb.createStatement("DELETE Stocks");
+			_deleteStatement = _myDb.createStatement("DELETE from Stocks");
 			
 			_deleteStatement.prepare();
 			_deleteStatement.execute();

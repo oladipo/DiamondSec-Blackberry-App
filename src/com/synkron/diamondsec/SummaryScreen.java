@@ -28,7 +28,9 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 	
 	CustomButtonField btnLogOff, btnMyAccount;
 	DataContext _dbContext;
-	String strCustomerId;
+	String strCustomerId, strCscsNumber, strCustomerName;
+	
+	CustomLabelField lblCSCSNumber;
 	
 	public SummaryScreen() {
 

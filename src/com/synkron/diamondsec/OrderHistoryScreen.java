@@ -7,6 +7,7 @@ import com.samples.toolkit.ui.container.NegativeMarginVerticalFieldManager;
 import com.samples.toolkit.ui.container.PillButtonSet;
 import com.samples.toolkit.ui.test.ForegroundManager;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
+import com.synkron.diamondsec.connectors.OpenOrdersConnector;
 import com.synkron.diamondsec.connectors.OrderHistoryConnector;
 import com.synkron.diamondsec.utils.DataContext;
 
@@ -57,8 +58,10 @@ public class OrderHistoryScreen extends SubScreen implements FieldChangeListener
 		_bodyWrapper.add(_currentBody);
 		
 		_pillNotSettled.setChangeListener(new FieldChangeListener(){
-			
+
 			public void fieldChanged( Field field, int context ) {
+
+				loadOpenOrders();
             	if( _currentBody != _notSettled ) {
 	                _bodyWrapper.replace( _currentBody, _notSettled );
 	                _currentBody = _notSettled;
@@ -88,12 +91,22 @@ public class OrderHistoryScreen extends SubScreen implements FieldChangeListener
             	}
             }
 		});
-		
+		loadOpenOrders();
 		foreground.add(_bodyWrapper);
 		add(foreground);
 	}
 	
 	public void fieldChanged(Field field, int context) {
 		// TODO Auto-generated method stub
+	}
+	
+	public void loadOpenOrders(){
+		DataContext dbContext = new DataContext();
+		String strCustomerId = (String)dbContext.get("CustomerID");
+		String _Url = InfoWareConnector.API_CUSTOMER_OPEN_ORDERS_URL;
+		
+		_Url = _Url+strCustomerId;
+		OpenOrdersConnector _connector = new OpenOrdersConnector(_Url);
+		_connector.start();
 	}
 }

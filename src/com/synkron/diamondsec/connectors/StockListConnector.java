@@ -32,23 +32,29 @@ import com.synkron.diamondsec.utils.SplitString;
 
 public class StockListConnector extends InfoWareConnector{
 
+	StockListScreen theScreen;
+	
 	public StockListConnector(String Url) {
 		super(Url);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public void run(){
+		
+		theScreen = (StockListScreen)UiApplication.getUiApplication().getActiveScreen();	
+		
 		synchronized(UiApplication.getEventLock()){
 			UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
 		}
+		
 		OutputStream oStream = null;
 		InputStream iStream = null;
 			try{	
-		_descriptor = _factory.getConnection(_Url);
-		if(_descriptor != null){
-			 _connection = _descriptor.getConnection();
-			 
-		}
+			_descriptor = _factory.getConnection(_Url);
+			if(_descriptor != null){
+				 _connection = _descriptor.getConnection();
+				 
+			}
 			OutputConnection outConnection = (OutputConnection) _connection;
 			oStream = outConnection.openOutputStream();
 			String getCommand = "GET " + "/" + " HTTP/1.0\r\n\r\n";
@@ -61,16 +67,11 @@ public class StockListConnector extends InfoWareConnector{
             _Result = new String(data);
             
             //System.out.print(_Result);
-            synchronized(UiApplication.getEventLock()){
-            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
-            }
             
     		UiApplication.getUiApplication().invokeLater(new Runnable(){
 
     			public void run() {
     				
-    				StockListScreen theScreen = (StockListScreen)UiApplication.
-    												getUiApplication().getActiveScreen();
     				MarketDatabase _myDb = new MarketDatabase();
     				_myDb.DeleteStocks();
     				theScreen._vManager.deleteAll();
@@ -147,6 +148,10 @@ public class StockListConnector extends InfoWareConnector{
 							theScreen._vManager.add(lsBtnField);
 							
 							sb = "";
+							
+				            //synchronized(UiApplication.getEventLock()){
+				            //	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+				            //}
 						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -229,5 +234,8 @@ public class StockListConnector extends InfoWareConnector{
             }
 		}
 		
+        synchronized(UiApplication.getEventLock()){
+        	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+        }
 	}
 }

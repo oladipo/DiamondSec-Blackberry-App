@@ -68,6 +68,9 @@ public class StockListScreen extends SubScreen {
 				_vManager.deleteAll();
 				
 					try {
+						synchronized(UiApplication.getEventLock()){
+							UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+						}
 						while(myCursor.next()){
 								myRow = myCursor.getRow();
 								i++;
@@ -109,6 +112,10 @@ public class StockListScreen extends SubScreen {
 						
 						_myDB.Close();
 						_myDB._selectStatement.close();
+						
+			            synchronized(UiApplication.getEventLock()){
+			            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+			            }
 					} catch (DatabaseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -140,6 +147,7 @@ public class StockListScreen extends SubScreen {
 			saved = _dContext.get("isSaved").toString();
 		}
 
+
 		if(_dContext.get("savedDate") != null){
 			saveDate = _dContext.get("savedDate").toString();
 			getDate = formatter.format(now);
@@ -148,6 +156,9 @@ public class StockListScreen extends SubScreen {
 			long parseSave =  HttpDateParser.parse(saveDate);
 			lapseTime = (parseGet - parseSave);
 		}
+		
+		//saved = "false"; lapseTime = 86400001;
+		
 		//24 hours = 86400000 milliseconds
 		if(saved.equals("false") || (lapseTime > 86400000)){
 			String Url = InfoWareConnector.API_FULL_PRICE_LIST_URL;
@@ -159,14 +170,39 @@ public class StockListScreen extends SubScreen {
 		else{
 			//retrieve price list from data store.
 			//data store will need to be refreshed periodically...
+
 			_vManager.deleteAll();
-			MarketDatabase _myDB = new MarketDatabase();
-			Cursor myCursor = _myDB.SelectRecords();
-			Row myRow;
-			int i = 0;
-			int backColor = Color.DARKBLUE;
 			
-				try {
+			//this should happen on another thread...
+			
+			DatabaseThread myDbThread = new DatabaseThread();
+			myDbThread.start();
+		}
+	}
+    
+	public class DatabaseThread extends Thread{
+
+		StockListScreen myscreen;
+		
+		public void run(){
+			myscreen = (StockListScreen)UiApplication.getUiApplication().getActiveScreen();		
+			
+			synchronized(UiApplication.getEventLock()){
+				UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+			}
+			
+    		UiApplication.getUiApplication().invokeLater(new Runnable(){
+
+    			public void run() {
+    				
+    				MarketDatabase _myDB = new MarketDatabase();
+    				Cursor myCursor = _myDB.SelectRecords();
+    				Row myRow;
+    				int i = 0;
+    				int backColor = Color.DARKBLUE;
+    				
+    				try {
+
 					while(myCursor.next()){
 							myRow = myCursor.getRow();
 							i++;
@@ -199,7 +235,9 @@ public class StockListScreen extends SubScreen {
 
 						lsBtnField.setMargin(new XYEdges(0,20,0,20));
 						lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
-						_vManager.add(lsBtnField);
+						
+						//get stock list screen..
+						myscreen._vManager.add(lsBtnField);
 					}
 					if(i == 0){
 						//No Data to display...
@@ -207,13 +245,27 @@ public class StockListScreen extends SubScreen {
 					
 					_myDB.Close();
 					_myDB._selectStatement.close();
+					
+		            
 				} catch (DatabaseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}catch (DataTypeException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
+		}
+    		});
+    		
+            synchronized(UiApplication.getEventLock()){
+            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+            }
 		}
 	}
 }

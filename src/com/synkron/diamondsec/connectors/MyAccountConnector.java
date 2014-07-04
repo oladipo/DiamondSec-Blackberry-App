@@ -14,13 +14,17 @@ import org.json.me.JSONObject;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
+import net.rim.device.api.ui.Ui;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.container.GridFieldManager;
+import net.rim.device.api.ui.container.HorizontalFieldManager;
 import net.rim.device.api.ui.decor.BackgroundFactory;
 
+import com.synkron.diamondsec.CustomLabelField;
 import com.synkron.diamondsec.LoginStatusScreen;
 import com.synkron.diamondsec.SummaryScreen;
 import com.synkron.diamondsec.utils.DataContext;
@@ -61,18 +65,21 @@ public class MyAccountConnector extends InfoWareConnector{
 			            	public void run(){
 			            		SummaryScreen theScreen = (SummaryScreen)UiApplication.
 								getUiApplication().getActiveScreen();
-			            		
+			            		Font myFont = Font.getDefault().derive(Font.PLAIN, 7, Ui.UNITS_pt);
 			            		try{
+			            			HorizontalFieldManager _hUserProfile = new HorizontalFieldManager(Manager.USE_ALL_WIDTH);
+			            			_hUserProfile.setMargin(10, 50, 10, 50);
+			            			
 			            			GridFieldManager _grdSummary = new GridFieldManager(5,2,Manager.USE_ALL_HEIGHT);
 			            			_grdSummary.setColumnPadding(20);
 			            			_grdSummary.setRowPadding(15);
-			            			_grdSummary.setMargin(10, 50, 20, 50);
+			            			_grdSummary.setMargin(5, 50, 10, 50);
 			            			_grdSummary.setBackground(BackgroundFactory.createSolidBackground(Color.LIGHTBLUE));
 			            			
 			            			GridFieldManager _grdSubSummary = new GridFieldManager(2,2,Field.USE_ALL_WIDTH); 
 			            			_grdSubSummary.setColumnPadding(10);
 			            			_grdSubSummary.setRowPadding(20);
-			            			_grdSubSummary.setMargin(10, 50, 0, 50);
+			            			_grdSubSummary.setMargin(5, 50, 0, 50);
 			            			_grdSubSummary.setBackground(BackgroundFactory.createSolidBackground(Color.DARKBLUE));
 			            			
 			            			GridFieldManager _grdTotal = new GridFieldManager(2,2,Field.USE_ALL_WIDTH); 
@@ -86,6 +93,7 @@ public class MyAccountConnector extends InfoWareConnector{
 
 				            		double _total = 0; 
 				            		double _fundsAvailable = 0;
+				            		String customerName = null;
 				            		
 									for(int i = 0; i < jsonArray.length(); i++){
 										//add a field to the screen..
@@ -96,6 +104,17 @@ public class MyAccountConnector extends InfoWareConnector{
 											
 											System.out.println(innerObj.getString("Value"));
 											
+											if(j == 1){
+												customerName = innerObj.getString("Value");
+												 
+												CustomLabelField lblCustomerName = new CustomLabelField();
+												lblCustomerName.setText(customerName);
+												lblCustomerName.setMargin(10,5,0,10);
+												lblCustomerName.setFontColor(Color.WHITE);
+												lblCustomerName.setFont(myFont);
+												
+												_hUserProfile.add(lblCustomerName);
+											}
 											if(j == 6){
 												_fundsAvailable += innerObj.getDouble("Value");
 											}
@@ -238,7 +257,28 @@ public class MyAccountConnector extends InfoWareConnector{
 										_dContext.set("funds", String.valueOf(_fundsAvailable));
 										_dContext.commit();
 										
+										_dContext.set("customerName", customerName);
+										_dContext.commit();
+										
 										theScreen._summary.deleteAll();
+										
+										
+										CustomLabelField lblCustomerId = new CustomLabelField();
+										lblCustomerId.setText(_dContext.get("CustomerID"));
+										lblCustomerId.setMargin(10,5,0,10);
+										lblCustomerId.setFontColor(Color.WHITE);
+										lblCustomerId.setFont(myFont);
+										
+										
+										CustomLabelField lblCSCSNumber = new CustomLabelField(_dContext.get("CSCS Number"), Field.USE_ALL_WIDTH);
+										lblCSCSNumber.setMargin(10,5,0,0);
+										lblCSCSNumber.setFontColor(Color.WHITE);
+										lblCSCSNumber.setFont(myFont);
+										
+										_hUserProfile.add(lblCustomerId);
+										_hUserProfile.add(lblCSCSNumber);
+										
+										theScreen._summary.add(_hUserProfile);
 										theScreen._summary.add(_grdSummary);
 										theScreen._summary.add(_grdSubSummary);
 										theScreen._summary.add(_grdTotal);

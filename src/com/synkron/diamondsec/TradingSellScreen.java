@@ -58,11 +58,11 @@ public class TradingSellScreen extends SubScreen implements FieldChangeListener{
 		_vManager = new VerticalFieldManager();
 		
 		_hManagerEquity = new HorizontalFieldManager(Field.FIELD_VCENTER | USE_ALL_WIDTH);
-		_hManagerEquity.setBackground(BackgroundFactory.createSolidBackground(Color.DEEPPINK));
+		_hManagerEquity.setBackground(BackgroundFactory.createSolidBackground(Color.LIGHTPINK));
 		_hManagerEquity.setMargin(20,20,0,20);
 		
 		_hManagerPrice = new HorizontalFieldManager(Field.FIELD_VCENTER | USE_ALL_WIDTH);
-		_hManagerPrice.setBackground(BackgroundFactory.createSolidBackground(Color.DEEPPINK));
+		_hManagerPrice.setBackground(BackgroundFactory.createSolidBackground(Color.LIGHTPINK));
 		_hManagerPrice.setMargin(0,20,0,20);
 		
 		_hManagerOrder = new HorizontalFieldManager(Field.FIELD_VCENTER | USE_ALL_WIDTH);
