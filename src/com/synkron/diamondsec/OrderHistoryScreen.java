@@ -35,7 +35,7 @@ public class OrderHistoryScreen extends SubScreen implements FieldChangeListener
 		Manager foreground = new ForegroundManager();
 		
 		_pillButtonSet = new PillButtonSet();
-		_pillNotSettled = new PillButtonField("Not Settled");
+		_pillNotSettled = new PillButtonField("Open Orders");
 		_pillAllHistory = new PillButtonField("All History");
 		
 		_pillButtonSet.add(_pillNotSettled);
