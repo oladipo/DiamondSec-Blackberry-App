@@ -3,6 +3,8 @@ package com.synkron.diamondsec;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
 import com.synkron.diamondsec.connectors.LoginConnector;
 
+import net.rim.blackberry.api.browser.Browser;
+import net.rim.blackberry.api.browser.BrowserSession;
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.*;
 import net.rim.device.api.ui.container.*;
@@ -15,11 +17,13 @@ public class LoginScreen extends BaseScreen implements FieldChangeListener{
 	PasswordEditField txtPassword;
 	CustomLabelField lblUsername, lblPassword;
 	CustomButtonField btnLogin;
-	CustomHyperLinkButtonField btnForgotPass;
+	CustomHyperLinkButtonField btnForgotPass, btnSignUp;
 	
 	VerticalFieldManager vManager;
 	HorizontalFieldManager hUserManager, hPasswordManager;
 
+	static String URL = "http://www.diamond-securities.com/";
+	
 	public LoginScreen() {
 		super(NO_VERTICAL_SCROLL | USE_ALL_HEIGHT | USE_ALL_WIDTH);
 		
@@ -88,7 +92,10 @@ public class LoginScreen extends BaseScreen implements FieldChangeListener{
 		
 		vManager.add(btnForgotPass);
 		
-		vManager.add(new CustomHyperLinkButtonField("You Do Not have an ID? Click Here"));
+		btnSignUp = new CustomHyperLinkButtonField("You Do Not have an ID? Click Here");
+		btnSignUp.setChangeListener(this);
+		
+		vManager.add(btnSignUp);
 		
 		add(vManager);
 	}
@@ -123,6 +130,11 @@ public class LoginScreen extends BaseScreen implements FieldChangeListener{
 		if(arg0 == btnForgotPass){
 			
 			diamondSec.pushScreen(new ForgotPasswordScreen());
+		}
+		
+		if(arg0 == btnSignUp){
+			BrowserSession bSession = Browser.getDefaultSession();
+			bSession.displayPage(URL);
 		}
 	}
 	

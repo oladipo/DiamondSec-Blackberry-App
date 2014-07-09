@@ -64,11 +64,11 @@ public class MyAccountConnector extends InfoWareConnector{
 			            	
 			            	public void run(){
 			            		SummaryScreen theScreen = (SummaryScreen)UiApplication.
-								getUiApplication().getActiveScreen();
-			            		Font myFont = Font.getDefault().derive(Font.PLAIN, 7, Ui.UNITS_pt);
+									getUiApplication().getActiveScreen();
+			            		Font myFont = Font.getDefault().derive(Font.PLAIN,6, Ui.UNITS_pt);
 			            		try{
 			            			HorizontalFieldManager _hUserProfile = new HorizontalFieldManager(Manager.USE_ALL_WIDTH);
-			            			_hUserProfile.setMargin(10, 50, 10, 50);
+			            			_hUserProfile.setMargin(10, 20, 10, 50);
 			            			
 			            			GridFieldManager _grdSummary = new GridFieldManager(5,2,Manager.USE_ALL_HEIGHT);
 			            			_grdSummary.setColumnPadding(20);
@@ -106,14 +106,6 @@ public class MyAccountConnector extends InfoWareConnector{
 											
 											if(j == 1){
 												customerName = innerObj.getString("Value");
-												 
-												CustomLabelField lblCustomerName = new CustomLabelField();
-												lblCustomerName.setText(customerName);
-												lblCustomerName.setMargin(10,5,0,10);
-												lblCustomerName.setFontColor(Color.WHITE);
-												lblCustomerName.setFont(myFont);
-												
-												_hUserProfile.add(lblCustomerName);
 											}
 											if(j == 6){
 												_fundsAvailable += innerObj.getDouble("Value");
@@ -263,20 +255,13 @@ public class MyAccountConnector extends InfoWareConnector{
 										theScreen._summary.deleteAll();
 										
 										
-										CustomLabelField lblCustomerId = new CustomLabelField();
-										lblCustomerId.setText(_dContext.get("CustomerID"));
-										lblCustomerId.setMargin(10,5,0,10);
-										lblCustomerId.setFontColor(Color.WHITE);
-										lblCustomerId.setFont(myFont);
-										
-										
-										CustomLabelField lblCSCSNumber = new CustomLabelField(_dContext.get("CSCS Number"), Field.USE_ALL_WIDTH);
-										lblCSCSNumber.setMargin(10,5,0,0);
-										lblCSCSNumber.setFontColor(Color.WHITE);
-										lblCSCSNumber.setFont(myFont);
-										
-										_hUserProfile.add(lblCustomerId);
-										_hUserProfile.add(lblCSCSNumber);
+										CustomLabelField lblCustomerProfile = new CustomLabelField();
+										lblCustomerProfile.setText(customerName+" "+_dContext.get("CustomerID")+" "+_dContext.get("CSCS Number"));
+										//lblCustomerProfile.setMargin(10,5,0,10);
+										lblCustomerProfile.setFontColor(Color.WHITE);
+										lblCustomerProfile.setFont(myFont);
+
+										_hUserProfile.add(lblCustomerProfile);
 										
 										theScreen._summary.add(_hUserProfile);
 										theScreen._summary.add(_grdSummary);
