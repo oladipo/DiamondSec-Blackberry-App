@@ -11,6 +11,8 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import com.synkron.diamondsec.utils.DataContext;
+
 public class TradingBuyConnector extends InfoWareConnector{
 
 	public TradingBuyConnector(String Url) {
@@ -37,6 +39,8 @@ public class TradingBuyConnector extends InfoWareConnector{
 				iStream = inputConn.openInputStream();
 	            byte[] data = net.rim.device.api.io.IOUtilities.streamToBytes(iStream);
 	            _Result = new String(data);
+	            String strTradePIN = "";
+	            
 	            System.out.println(_Result);
 	            
 	            try {
@@ -45,11 +49,23 @@ public class TradingBuyConnector extends InfoWareConnector{
 					
 					for(int i = 0; i < jsonArray.length(); i++){
 						JSONArray inner  = jsonArray.getJSONArray(i);
+						
 						for(int j = 0; j < inner.length() ; j++){
-							
+							JSONObject innerObj = inner.getJSONObject(j);
+									
+								if(j == 18){
+									strTradePIN = innerObj.getString("Value");
+								}
 						}
 
 					}
+					
+					//save the trade PIN to persistent storage
+					DataContext _dContext = new DataContext();
+					_dContext.set("TradePIN", strTradePIN);
+					
+					_dContext.commit();
+					
 	            }catch(JSONException e){
 	            	e.printStackTrace();
 	            }

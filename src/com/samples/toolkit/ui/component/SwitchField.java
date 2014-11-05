@@ -19,6 +19,7 @@ package com.samples.toolkit.ui.component;
 
 import net.rim.device.api.system.*;
 import net.rim.device.api.ui.*;
+import net.rim.device.api.util.StringProvider;
 
 public class SwitchField extends Field
 {
@@ -160,11 +161,11 @@ public class SwitchField extends Field
      */
     static class ChangeOptionMenuItem extends MenuItem {
         ChangeOptionMenuItem() {
-            super("Toggle", 30270, 10);
+            super(new StringProvider("Toggle"), 30270, 10);
         }
 
         ChangeOptionMenuItem(String text) {
-            super(text, 30270, 10);
+            super(new StringProvider(text), 30270, 10);
         }
 
         public void run() {

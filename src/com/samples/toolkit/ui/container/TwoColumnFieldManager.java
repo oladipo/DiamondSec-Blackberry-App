@@ -92,7 +92,7 @@ public class TwoColumnFieldManager extends Manager
             Field currentField = getField( i );
             actualHeight += Math.max( currentField.getMarginTop(), previousMarginBottom );
             
-            int availableChildWidth = actualWidth - currentField.getMarginLeft() - currentField.getMarginRight();
+            //int availableChildWidth = actualWidth - currentField.getMarginLeft() - currentField.getMarginRight();
 
             int childX;
             switch( (int)( ( currentField.getStyle() & FIELD_HALIGN_MASK ) >> SYSTEM_STYLE_SHIFT ) ) {

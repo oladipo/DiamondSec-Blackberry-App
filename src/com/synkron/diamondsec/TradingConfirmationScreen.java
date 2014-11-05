@@ -5,6 +5,7 @@ import java.util.Date;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
 import com.synkron.diamondsec.connectors.TradingConfirmationConnector;
 import com.synkron.diamondsec.entities.*;
+import com.synkron.diamondsec.utils.DataContext;
 import com.synkron.diamondsec.utils.URLUTF8Encoder;
 
 import net.rim.device.api.i18n.DateFormat;
@@ -13,6 +14,7 @@ import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.Manager;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.component.*;
 import net.rim.device.api.ui.container.*;
@@ -181,9 +183,24 @@ public class TradingConfirmationScreen extends SubScreen {
 				String _Url = InfoWareConnector.API_PLACE_TRADE_ORDER_URL;
 				_Url = _Url+_txtPIN.getText()+"|"+_theTrade.strPlaceTradeURL+"|"+strEffectiveDate+"|"+strInstructions;
 				
-
-				TradingConfirmationConnector _connector = new TradingConfirmationConnector(_Url);
-				_connector.start();
+				boolean isPinValid = false;
+				//validate PIN 
+				DataContext _dContext = new DataContext();
+				
+				String strTradePIN = (String)_dContext.get("TradePIN");
+				
+				if(_txtPIN.getText().equals(strTradePIN)){
+					isPinValid = true;
+				}
+				
+				if(isPinValid){
+					TradingConfirmationConnector _connector = new TradingConfirmationConnector(_Url);
+					_connector.start();
+				}else{
+					//trade pin is invalid..
+					UiApplication.getUiApplication().pushScreen(
+							new LoginStatusScreen("Invalid PIN, Please try again"));					
+				}
 			}
 		});
 		_btnSubmit.setMargin(new XYEdges(20,0,10,0));

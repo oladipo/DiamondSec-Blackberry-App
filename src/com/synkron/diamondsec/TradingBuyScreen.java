@@ -5,6 +5,7 @@ import java.util.Date;
 import com.samples.toolkit.ui.component.LabeledSwitch;
 import com.synkron.diamondsec.connectors.InfoWareConnector;
 import com.synkron.diamondsec.connectors.TradingBuyConnector;
+
 import com.synkron.diamondsec.entities.*;
 import com.synkron.diamondsec.utils.DataContext;
 
@@ -305,6 +306,23 @@ public class TradingBuyScreen extends SubScreen implements FieldChangeListener{
 			TradingBuyConnector _connector = new TradingBuyConnector(URL);
 			_connector.start();
 			
+			/*
+			//send request to pin generator to call customer with transaction code....
+			String phone = ""; //get customer phone number from local storage...
+			//append phone number as querystring for tropo global variable...
+			String tropoURL = TropoConnector.API_CALL_ENDPOINT;
+			phone = (String)_dbContext.get("phone");
+			
+			//remove leading zero from mobile number, probably refactor to a different class..
+			
+			phone = phone.substring(1);
+			
+			tropoURL = tropoURL+"&phone="+phone;
+			
+			TropoConnector _tropoConnector = new TropoConnector(tropoURL);
+			_tropoConnector.start();
+			
+			*/
 			Trade _theTrade = new Trade();
 			
 			if(_orderSwitch.getOnState()){

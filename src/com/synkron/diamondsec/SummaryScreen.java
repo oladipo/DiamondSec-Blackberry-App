@@ -57,8 +57,9 @@ public class SummaryScreen extends SubScreen implements FieldChangeListener {
 		_bodyWrapper = new NegativeMarginVerticalFieldManager( USE_ALL_WIDTH );
 		
 		//_myStocks = new ListStyleButtonSet();
-		_myStocks = new VerticalFieldManager();
+		_myStocks = new VerticalFieldManager(USE_ALL_HEIGHT |USE_ALL_WIDTH);
 		_myStocks.setMargin(20,0,0,0);
+		
 		_summary = new VerticalFieldManager(USE_ALL_HEIGHT |USE_ALL_WIDTH);
 		_summary.setMargin(0,0,0,0);
 		

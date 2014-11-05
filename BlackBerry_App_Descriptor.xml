@@ -18,5 +18,9 @@
     <ClassProtection/>
     <PackageProtection/>
   </HiddenProperties>
-  <AlternateEntryPoints/>
+  <AlternateEntryPoints>
+    <AlternateEntryPoint Title="tickerUpdater" MainMIDletName="" ArgumentsForMain="ticker" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="true" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
+      <Icons/>
+    </AlternateEntryPoint>
+  </AlternateEntryPoints>
 </Properties>

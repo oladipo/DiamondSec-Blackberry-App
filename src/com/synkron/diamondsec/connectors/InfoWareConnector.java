@@ -25,6 +25,9 @@ public class InfoWareConnector extends Thread{
 	public static final String API_CUSTOMER_STATEMENT_URL = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000001/";
 	public static final String API_CUSTOMER_OPEN_ORDERS_URL = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000014/";
 	public static final String API_CUSTOMER_TRANSACTION_HISTORY_URL = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000015/";
+	public static final String API_ALL_TOP_GAINERS_LAST_TRADING_DAY = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000016";
+	public static final String API_ALL_TOP_LOOSERS_LAST_TRADING_DAY = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000017";
+	public static final String API_ASI_MARKET_INFORMATION = "http://www.infowarelimited.com/svcs/svcs01/IWDataSvc.svc/json/1101/1325/1000018";
 	//END API ENDPOINTS
 	
 	//BEGIN TRADE ACTION DEFINITION

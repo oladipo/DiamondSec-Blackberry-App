@@ -16,9 +16,6 @@
 
 package com.samples.toolkit.ui.test;
 
-
-import com.samples.toolkit.ui.component.*;
-import com.samples.toolkit.ui.container.*;
 import com.samples.toolkit.ui.decor.*;
 import net.rim.device.api.system.*;
 import net.rim.device.api.ui.*;

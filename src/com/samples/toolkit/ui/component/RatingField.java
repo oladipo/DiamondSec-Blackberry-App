@@ -247,7 +247,7 @@ public class RatingField extends Field
 //#ifndef VER_4.6.1 | VER_4.6.0 | VER_4.5.0 | VER_4.2.1 | VER_4.2.0
     protected boolean touchEvent(TouchEvent message)
     {
-        boolean isConsumed = false;
+        //boolean isConsumed = false;
         boolean isOutOfBounds = false;
         int x = message.getX(1);
         int y = message.getY(1);

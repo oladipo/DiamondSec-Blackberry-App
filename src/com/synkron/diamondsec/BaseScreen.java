@@ -4,7 +4,10 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.BitmapField;
+import net.rim.device.api.ui.component.ButtonField;
+import net.rim.device.api.ui.component.Dialog;
 import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.container.VerticalFieldManager;
 import net.rim.device.api.ui.decor.Background;
@@ -69,6 +72,27 @@ public class BaseScreen extends MainScreen
 		setStatus(_vStatusManager);
     }
     public void close(){
-    	System.exit(0);
+    	int screenCount = UiApplication.getUiApplication().getScreenCount();
+    	
+    	if(screenCount == 1){
+    		//prompt the user if he wants to close the app..
+    		Dialog alertDialog = new Dialog(Dialog.D_YES_NO, "Are you sure you want to close the app?", 
+    				0, Bitmap.getPredefinedBitmap(Bitmap.QUESTION), Manager.USE_ALL_WIDTH){
+    			
+    			public void fieldChanged(Field field, int context){
+    		    	ButtonField btnField = (ButtonField)field;
+    		    	
+    				String fieldName = btnField.getLabel();
+    				
+    				if(fieldName.equals("Yes")){
+    					System.exit(0);
+    				}
+    			}
+    		};
+    		
+    		alertDialog.show();
+    		
+    	}
+    	//System.exit(0);
     }
 }

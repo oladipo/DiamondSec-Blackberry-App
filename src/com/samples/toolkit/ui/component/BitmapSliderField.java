@@ -22,6 +22,7 @@ import java.lang.Math;
 
 import net.rim.device.api.system.*;
 import net.rim.device.api.ui.*;
+import net.rim.device.api.util.StringProvider;
 
 
 public class BitmapSliderField extends Field
@@ -475,12 +476,13 @@ public class BitmapSliderField extends Field
      * @category Internal InnerClass
      */
     static class ChangeOptionMenuItem extends MenuItem {
-        ChangeOptionMenuItem() {
-            super("Select", 30270, 10);
+    	
+    	ChangeOptionMenuItem() {
+            super(new StringProvider("Select"), 30270, 10);
         }
 
         ChangeOptionMenuItem(String text) {
-            super(text, 30270, 10);
+            super(new StringProvider(text), 30270, 10);
         }
 
         public void run() {

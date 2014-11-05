@@ -28,6 +28,7 @@ import com.synkron.diamondsec.CustomLabelField;
 import com.synkron.diamondsec.LoginStatusScreen;
 import com.synkron.diamondsec.SummaryScreen;
 import com.synkron.diamondsec.utils.DataContext;
+import com.synkron.diamondsec.utils.NumberFormatter;
 public class MyAccountConnector extends InfoWareConnector{
 
 	public MyAccountConnector(String Url) {
@@ -94,6 +95,7 @@ public class MyAccountConnector extends InfoWareConnector{
 				            		double _total = 0; 
 				            		double _fundsAvailable = 0;
 				            		String customerName = null;
+				            		String phone =  null;
 				            		
 									for(int i = 0; i < jsonArray.length(); i++){
 										//add a field to the screen..
@@ -107,6 +109,9 @@ public class MyAccountConnector extends InfoWareConnector{
 											if(j == 1){
 												customerName = innerObj.getString("Value");
 											}
+											if(j == 3){
+												phone = innerObj.getString("Value");
+											}
 											if(j == 6){
 												_fundsAvailable += innerObj.getDouble("Value");
 											}
@@ -117,7 +122,7 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
-												_grdSummary.add(new LabelField(innerObj.getString("Value"),Field.FIELD_RIGHT){
+												_grdSummary.add(new LabelField(NumberFormatter.formatNumber(innerObj.getDouble("Value"),2,","),Field.FIELD_RIGHT){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -192,7 +197,7 @@ public class MyAccountConnector extends InfoWareConnector{
 												    	return this.getHeight();
 												    }
 												});
-												_grdSubSummary.add(new LabelField(String.valueOf(_fundsAvailable)){
+												_grdSubSummary.add(new LabelField(NumberFormatter.formatNumber(_fundsAvailable,2,",")){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -220,7 +225,7 @@ public class MyAccountConnector extends InfoWareConnector{
 											            super.paint(graphics);  
 											        }
 												});
-												_grdTotal.add(new LabelField(String.valueOf(_total),Field.FIELD_LEFT){
+												_grdTotal.add(new LabelField(NumberFormatter.formatNumber(_total,2,","),Field.FIELD_LEFT){
 													public void paint(Graphics graphics) {
 											            graphics.setColor(Color.WHITE);
 											            super.paint(graphics);  
@@ -250,6 +255,9 @@ public class MyAccountConnector extends InfoWareConnector{
 										_dContext.commit();
 										
 										_dContext.set("customerName", customerName);
+										_dContext.commit();
+										
+										_dContext.set("phone", phone);
 										_dContext.commit();
 										
 										theScreen._summary.deleteAll();

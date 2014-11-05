@@ -167,6 +167,9 @@ public class StockListConnector extends InfoWareConnector{
 					_dContext.set("savedDate", formatter.format(date));
 					_dContext.commit();
 					
+			        synchronized(UiApplication.getEventLock()){
+			        	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+			        }
     			}
     		});
             
@@ -234,8 +237,5 @@ public class StockListConnector extends InfoWareConnector{
             }
 		}
 		
-        synchronized(UiApplication.getEventLock()){
-        	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
-        }
 	}
 }

@@ -110,7 +110,7 @@ public class BitmapGaugeField extends Field
     
     private void makeBitmapTransparent( Bitmap bitmap ) 
     {
-        Graphics g = new Graphics( bitmap );
+        Graphics g = Graphics.create(bitmap);
         g.setGlobalAlpha( 0x00 );
         g.clear();
     }

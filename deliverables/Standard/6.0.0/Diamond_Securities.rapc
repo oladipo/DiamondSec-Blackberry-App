@@ -8,4 +8,6 @@ MicroEdition-Profile: MIDP-2.0
 MicroEdition-Configuration: CLDC-1.1
 MIDlet-1: Diamond Securities,img/icon-80.png,
 RIM-MIDlet-Flags-1: 0
+MIDlet-2: tickerUpdater,,ticker
+RIM-MIDlet-Flags-2: 3
 

@@ -194,7 +194,7 @@ public class StockListScreen extends SubScreen {
     		UiApplication.getUiApplication().invokeLater(new Runnable(){
 
     			public void run() {
-    				
+
     				MarketDatabase _myDB = new MarketDatabase();
     				Cursor myCursor = _myDB.SelectRecords();
     				Row myRow;
@@ -260,12 +260,13 @@ public class StockListScreen extends SubScreen {
 					e.printStackTrace();
 					System.out.println(e.getMessage());
 				}
-		}
+		    		
+	            synchronized(UiApplication.getEventLock()){
+	            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+	           }
+    		}
     		});
-    		
-            synchronized(UiApplication.getEventLock()){
-            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
-            }
+
 		}
 	}
 }

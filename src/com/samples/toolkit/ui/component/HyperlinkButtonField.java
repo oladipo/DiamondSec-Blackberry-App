@@ -19,6 +19,7 @@ package com.samples.toolkit.ui.component;
 import net.rim.device.api.system.*;
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.LabelField;
+import net.rim.device.api.util.StringProvider;
 
 
 public class HyperlinkButtonField extends LabelField
@@ -154,7 +155,9 @@ public class HyperlinkButtonField extends LabelField
          || _menuPriority < 0 ) {
             return null;
         }
-        return new MenuItem( getMenuText(), _menuOrdinal, _menuPriority ) {
+        StringProvider sendExpenses = new StringProvider(getMenuText());
+        
+        return new MenuItem( sendExpenses, _menuOrdinal, _menuPriority ) {
             public void run() {
                 fieldChangeNotify( 0 );
             }

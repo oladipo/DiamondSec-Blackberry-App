@@ -18,6 +18,7 @@ package com.samples.toolkit.ui.component;
 
 import net.rim.device.api.system.*;
 import net.rim.device.api.ui.*;
+import net.rim.device.api.util.StringProvider;
 
 public class LabeledSwitch extends Field
 {
@@ -36,8 +37,6 @@ public class LabeledSwitch extends Field
     private Bitmap _imageOffFocus;
     
     private boolean _on;
-    private boolean _selected;
-    
     protected Font _labelFont;
         
     private static MenuItem _changeOptionsItem = new ChangeOptionMenuItem();
@@ -48,8 +47,6 @@ public class LabeledSwitch extends Field
     private int _horizontalTextImageGap;
     
     private Bitmap _switchImage;  
-    private String _labelText;  
-            
     public LabeledSwitch( Bitmap imageOn
                 , Bitmap imageOff
                 , Bitmap imageOnFocus
@@ -69,8 +66,6 @@ public class LabeledSwitch extends Field
         _imageOffFocus = imageOffFocus;
         
         _on = onByDefault;
-        _selected = false;
-        
         _horizontalTextImageGap = _imageOn.getHeight() / 3;
         
     }
@@ -224,11 +219,11 @@ public class LabeledSwitch extends Field
      */
     static class ChangeOptionMenuItem extends MenuItem {
         ChangeOptionMenuItem() {
-            super("Toggle", 30270, 10);
+            super(new StringProvider("Toggle"), 30270, 10);
         }
 
         ChangeOptionMenuItem(String text) {
-            super(text, 30270, 10);
+            super(new StringProvider(text), 30270, 10);
         }
 
         public void run() {

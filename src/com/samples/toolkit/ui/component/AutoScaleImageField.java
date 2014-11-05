@@ -92,7 +92,7 @@ public class AutoScaleImageField extends Field
     
     protected void paint( Graphics g )
     {
-        if( g.isDrawingStyleSet( g.DRAWSTYLE_FOCUS ) ) {
+        if( g.isDrawingStyleSet( Graphics.DRAWSTYLE_FOCUS ) ) {
             g.drawImage( 0, 0, _focusedScaledImage.getScaledWidth(), _focusedScaledImage.getScaledHeight(), _focusedScaledImage, 0, 0, 0 );
         } else {
             g.drawImage( 0, 0, _normalScaledImage.getScaledWidth(), _normalScaledImage.getScaledHeight(), _normalScaledImage, 0, 0, 0 );

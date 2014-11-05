@@ -74,6 +74,7 @@ public class LoginConnector extends InfoWareConnector{
 									//Save Customer Id to Persistent Store Instance..
 									DataContext _dContext = new DataContext();
 									_dContext.set("CustomerID", strCustomerID);
+									
 									_dContext.commit();
 									
 									UiApplication.getUiApplication().invokeLater(new CSCSConnector(InfoWareConnector.API_GET_CUSTOMER_CSCS_NUMBERS_URL+strCustomerID));

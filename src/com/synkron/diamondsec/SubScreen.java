@@ -19,6 +19,35 @@ public class SubScreen extends BaseScreen {
 				diamondSec.pushScreen(new LoginScreen());
 			}
 		});
+		
+		addMenuItem(new MenuItem(new StringProvider("My Account"), 0, 0){
+			public void run(){
+				UiApplication diamondSec = UiApplication.getUiApplication();
+				diamondSec.pushScreen(new SummaryScreen());
+			}
+		});
+		
+		addMenuItem(new MenuItem(new StringProvider("Stocks List"), 0, 0){
+			public void run(){
+				UiApplication diamondSec = UiApplication.getUiApplication();
+				diamondSec.pushScreen(new StockListScreen());
+			}
+		});
+		
+		addMenuItem(new MenuItem(new StringProvider("Market Info"), 0, 0){
+			public void run(){
+				UiApplication diamondSec = UiApplication.getUiApplication();
+				diamondSec.pushScreen(new MarketInfoScreen());
+			}
+		});
+		
+		addMenuItem(new MenuItem(new StringProvider("Order History"), 0, 0){
+			public void run(){
+				UiApplication diamondSec = UiApplication.getUiApplication();
+				diamondSec.pushScreen(new OrderHistoryScreen());
+			}
+		});
+		
 		_btnLogOff = new CustomButtonField("Log Off", Color.DARKBLUE);
 		_btnLogOff.setChangeListener(new FieldChangeListener(){
 

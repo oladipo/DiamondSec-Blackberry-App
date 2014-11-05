@@ -37,10 +37,10 @@ public class JustifiedEvenlySpacedHorizontalFieldManager extends Manager
     
     protected void sublayout( int width, int height )
     {
-        int availableWidth = width;
+        //int availableWidth = width;
 
         int numFields = getFieldCount();
-        int maxPreferredWidth = 0;
+        //int maxPreferredWidth = 0;
         int maxHeight = 0;
 
 

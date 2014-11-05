@@ -36,6 +36,14 @@ public class MarketDatabase {
 		catch(MalformedURIException Ex){
 			System.out.print(Ex.getMessage());
 		}
+		finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
+		}
 		return _myDb;
 	}
 	public Cursor SelectRecords(){
@@ -48,6 +56,13 @@ public class MarketDatabase {
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 		return theCursor;
 	}
@@ -62,6 +77,13 @@ public class MarketDatabase {
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 		return theCursor;
 	}
@@ -78,6 +100,13 @@ public class MarketDatabase {
 			
 		}catch(DatabaseException Ex){
 			System.out.print(Ex.getMessage());
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 	}
 	public void InsertStock(String strTicker, String strName, String strPrice, String strChange){
@@ -94,6 +123,13 @@ public class MarketDatabase {
 		} catch (DatabaseException e) {
 
 			e.printStackTrace();
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 	}
 	public void InitializeQuery(){
@@ -106,6 +142,13 @@ public class MarketDatabase {
 		} catch (DatabaseIOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 	}
 	
@@ -120,6 +163,13 @@ public class MarketDatabase {
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				_myDb.close();
+			} catch (DatabaseIOException e) {
+				// TODO Auto-generated catch block
+				System.out.print(e.getMessage());
+			}
 		}
 	}
 }
