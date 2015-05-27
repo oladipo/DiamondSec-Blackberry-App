@@ -62,67 +62,79 @@ public class StockListScreen extends SubScreen {
 				String param = _txtSearch.getText();
 				MarketDatabase _myDB = new MarketDatabase();
 				Cursor myCursor = _myDB.Find(param);
-				Row myRow;
-				int i = 0;
-				int backColor = Color.DARKBLUE;
-				_vManager.deleteAll();
 				
-					try {
-						synchronized(UiApplication.getEventLock()){
-							UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
-						}
-						while(myCursor.next()){
-								myRow = myCursor.getRow();
-								i++;
-								if(i % 2 == 0){
-									backColor = Color.LIGHTBLUE;
-								}else{
-									backColor = Color.DARKBLUE;
-								}
-								ListStyleButtonField lsBtnField = new ListStyleButtonField(myRow.getString(0)+" "+myRow.getString(1)+"\n"+myRow.getString(2)+myRow.getString(3),0){
-								int color = Color.WHITE;
-								protected void paint(Graphics graphics) {
-										graphics.setColor(color);
-										super.paint(graphics);
-							    }
-							};
-							lsBtnField.setCookie(myRow.getString(0)+"|"+myRow.getString(1)+"|\n"+myRow.getString(2)+"|"+myRow.getString(3));
+				try {
+					if(!myCursor.isEmpty()){
+						Row myRow;
+						int i = 0;
+						int backColor = Color.DARKBLUE;
+						_vManager.deleteAll();
+						
+							synchronized(UiApplication.getEventLock()){
+								UiApplication.getUiApplication().pushScreen(new LoginStatusScreen());
+							}
+							while(myCursor.next()){
+									myRow = myCursor.getRow();
+									i++;
+									if(i % 2 == 0){
+										backColor = Color.LIGHTBLUE;
+									}else{
+										backColor = Color.DARKBLUE;
+									}
+									ListStyleButtonField lsBtnField = new ListStyleButtonField(myRow.getString(0)+" "+myRow.getString(1)+"\n"+myRow.getString(2)+myRow.getString(3),0){
+									int color = Color.WHITE;
+									protected void paint(Graphics graphics) {
+											graphics.setColor(color);
+											super.paint(graphics);
+								    }
+								};
+								lsBtnField.setCookie(myRow.getString(0)+"|"+myRow.getString(1)+"|\n"+myRow.getString(2)+"|"+myRow.getString(3));
+								
+								lsBtnField.setChangeListener(new FieldChangeListener(){
+									public void fieldChanged(Field field, int context) {
+										ListStyleButtonField _myButton = (ListStyleButtonField)field;
+										String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
+										Stock theStock = new Stock();
+										theStock._ticker = _txtStockCode[0];
+										theStock._name = _txtStockCode[1];
+										//replace the new line with empty string...
+										theStock._currentPrice = _txtStockCode[2].replace('\n', ' ').substring(8);
+										UiApplication.getUiApplication().pushScreen(new TradingScreen(theStock));
+									}
+								});
+	
+								lsBtnField.setMargin(new XYEdges(0,20,0,20));
+								lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
+								_vManager.add(lsBtnField);
+							}
+							if(i == 0){
+								//No Data to display...
+								_vManager.add(new LabelField("No Records Found..."));
+							}
 							
-							lsBtnField.setChangeListener(new FieldChangeListener(){
-								public void fieldChanged(Field field, int context) {
-									ListStyleButtonField _myButton = (ListStyleButtonField)field;
-									String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
-									Stock theStock = new Stock();
-									theStock._ticker = _txtStockCode[0];
-									theStock._name = _txtStockCode[1];
-									//replace the new line with empty string...
-									theStock._currentPrice = _txtStockCode[2].replace('\n', ' ').substring(8);
-									UiApplication.getUiApplication().pushScreen(new TradingScreen(theStock));
-								}
-							});
-
-							lsBtnField.setMargin(new XYEdges(0,20,0,20));
-							lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
-							_vManager.add(lsBtnField);
-						}
-						if(i == 0){
-							//No Data to display...
-							_vManager.add(new LabelField("No Records Found..."));
-						}
+							_myDB.Close();
+							_myDB._selectStatement.close();
+							
+				            synchronized(UiApplication.getEventLock()){
+				            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
+				            }
+					}else{
+						//no records found or empty database...
+						System.out.println("Empty cursor returned from database search");
 						
-						_myDB.Close();
-						_myDB._selectStatement.close();
-						
-			            synchronized(UiApplication.getEventLock()){
-			            	UiApplication.getUiApplication().popScreen(UiApplication.getUiApplication().getActiveScreen());
-			            }
-					} catch (DatabaseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}catch (DataTypeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+						//display message to user...
+						synchronized(UiApplication.getEventLock()){
+							UiApplication.getUiApplication().pushScreen(new LoginStatusScreen("Error: Database not Initialized"));
+						}
+		            }
+				} catch (DatabaseException e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+				}catch (DataTypeException e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+				}
+				
 			}
 		});
 		
@@ -173,8 +185,6 @@ public class StockListScreen extends SubScreen {
 
 			_vManager.deleteAll();
 			
-			//this should happen on another thread...
-			
 			DatabaseThread myDbThread = new DatabaseThread();
 			myDbThread.start();
 		}
@@ -202,51 +212,58 @@ public class StockListScreen extends SubScreen {
     				int backColor = Color.DARKBLUE;
     				
     				try {
-
-					while(myCursor.next()){
-							myRow = myCursor.getRow();
-							i++;
-							if(i % 2 == 0){
-								backColor = Color.LIGHTBLUE;
-							}else{
-								backColor = Color.DARKBLUE;
-							}
-							ListStyleButtonField lsBtnField = new ListStyleButtonField(myRow.getString(0)+" "+myRow.getString(1)+"\n"+myRow.getString(2)+myRow.getString(3),0){
-							int color = Color.WHITE;
-							protected void paint(Graphics graphics) {
-									graphics.setColor(color);
-									super.paint(graphics);
-						    }
-						};
-						lsBtnField.setCookie(myRow.getString(0)+"|"+myRow.getString(1)+"|\n"+myRow.getString(2)+"|"+myRow.getString(3));
+    					if(!myCursor.isEmpty()){
+							while(myCursor.next()){
+									myRow = myCursor.getRow();
+									i++;
+									if(i % 2 == 0){
+										backColor = Color.LIGHTBLUE;
+									}else{
+										backColor = Color.DARKBLUE;
+									}
+									ListStyleButtonField lsBtnField = new ListStyleButtonField(myRow.getString(0)+" "+myRow.getString(1)+"\n"+myRow.getString(2)+myRow.getString(3),0){
+									int color = Color.WHITE;
+									protected void paint(Graphics graphics) {
+											graphics.setColor(color);
+											super.paint(graphics);
+								    }
+								};
+								lsBtnField.setCookie(myRow.getString(0)+"|"+myRow.getString(1)+"|\n"+myRow.getString(2)+"|"+myRow.getString(3));
+								
+								lsBtnField.setChangeListener(new FieldChangeListener(){
+									public void fieldChanged(Field field, int context) {
+										ListStyleButtonField _myButton = (ListStyleButtonField)field;
+										String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
+										Stock theStock = new Stock();
+										theStock._ticker = _txtStockCode[0];
+										theStock._name = _txtStockCode[1];
+										//replace the new line with empty string...
+										theStock._currentPrice = _txtStockCode[2].replace('\n', ' ').substring(8);
+										UiApplication.getUiApplication().pushScreen(new TradingScreen(theStock));
+									}
+								});
+		
+								lsBtnField.setMargin(new XYEdges(0,20,0,20));
+								lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
 						
-						lsBtnField.setChangeListener(new FieldChangeListener(){
-							public void fieldChanged(Field field, int context) {
-								ListStyleButtonField _myButton = (ListStyleButtonField)field;
-								String _txtStockCode[] = SplitString.split((_myButton.getCookie().toString()),"|");
-								Stock theStock = new Stock();
-								theStock._ticker = _txtStockCode[0];
-								theStock._name = _txtStockCode[1];
-								//replace the new line with empty string...
-								theStock._currentPrice = _txtStockCode[2].replace('\n', ' ').substring(8);
-								UiApplication.getUiApplication().pushScreen(new TradingScreen(theStock));
+								//get stock list screen..
+								myscreen._vManager.add(lsBtnField);
 							}
-						});
-
-						lsBtnField.setMargin(new XYEdges(0,20,0,20));
-						lsBtnField.setBackground(BackgroundFactory.createSolidBackground(backColor));
-						
-						//get stock list screen..
-						myscreen._vManager.add(lsBtnField);
-					}
-					if(i == 0){
-						//No Data to display...
-					}
-					
-					_myDB.Close();
-					_myDB._selectStatement.close();
-					
-		            
+							if(i == 0){
+								//No Data to display...
+							}
+							
+							_myDB._selectStatement.close();
+							_myDB.Close(); 
+    					}else{
+    						//no records found or empty database...
+    						System.out.println("Empty cursor returned from database search");
+    						
+    						//display message to user...
+    						synchronized(UiApplication.getEventLock()){
+    							UiApplication.getUiApplication().pushScreen(new LoginStatusScreen("Error: Database not Initialized"));
+    						}
+    					}
 				} catch (DatabaseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

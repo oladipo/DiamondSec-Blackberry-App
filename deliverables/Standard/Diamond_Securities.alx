@@ -13,7 +13,7 @@
 			Synkron Solutions Limited
 		</vendor>
 		<copyright >
-			Copyright (c) 2014 Synkron Solutions Limited
+			Copyright (c) 2015 Synkron Solutions Limited
 		</copyright>
 		<fileset Java="1.54" _blackberryVersion="[6.0.0)">
 			<directory >

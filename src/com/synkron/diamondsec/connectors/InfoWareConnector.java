@@ -3,9 +3,12 @@ package com.synkron.diamondsec.connectors;
 import javax.microedition.io.*;
 import net.rim.device.api.io.transport.*;
 import net.rim.device.api.io.transport.options.BisBOptions;
+import net.rim.device.api.servicebook.ServiceBook;
+import net.rim.device.api.servicebook.ServiceRecord;
+import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.util.Arrays;
 
-public class InfoWareConnector extends Thread{
+public class InfoWareConnector extends Thread implements net.rim.device.api.system.CoverageStatusListener{
 	public String _Url, _Result;
 	public int[] _transports;
 	protected ConnectionFactory _factory;
@@ -50,9 +53,20 @@ public class InfoWareConnector extends Thread{
 	public static final int API_TIME_IN_FORCE_GOODTILLDATE = 6;
 	//END TIME IN FORCE
 	
+	public boolean _mdsSupport = false;
+	public boolean _bisSupport = false;
 	
 	public InfoWareConnector(String Url){
-		this._Url = Url;	
+		
+		 CoverageInfo.addListener(this);
+		 
+		if(_bisSupport){
+			this._Url = Url + ";deviceside=false;ConnectionType=mds-public";
+		}else if(_mdsSupport){
+			this._Url = Url + ";deviceside=false";
+		}else{
+			this._Url = Url + ";deviceside=true";
+		}
 		_transports = new int[]{
 				TransportInfo.TRANSPORT_TCP_WIFI,
 				TransportInfo.TRANSPORT_WAP2,
@@ -82,7 +96,7 @@ public class InfoWareConnector extends Thread{
 		_factory.setConnectionTimeout(10000);
 		_factory.setAttemptsLimit(5);
 		_factory.setTimeLimit(10000);
-		_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("mds-public"));
+		_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("MDS_PUBLIC"));
 		//_factory.setTransportTypeOptions(TransportInfo.TRANSPORT_BIS_B, new BisBOptions("FQ2y34b6")); 
 		// Set ConnectionFactory options.
         if(_transports.length > 0)
@@ -91,8 +105,71 @@ public class InfoWareConnector extends Thread{
         }
 	}
 	
+    private void setCoverage() {
+    	if (CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_MDS)) {
+       		_mdsSupport = true;
+    	}
+    	if (CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_BIS_B)) {
+    		_bisSupport = true;
+    	}
+    }
+    
+    /**
+     * This method handles changes in Coverage through the CoverageStatusListener interface.
+     * CoverageStatusListener works with CoverageInfo and is available with 4.2.0 
+     */
+    public void coverageStatusChanged(int newCoverage) {
+    	if ((newCoverage & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS) {
+        	_mdsSupport = true;
+    	}
+    	if ((newCoverage & CoverageInfo.COVERAGE_BIS_B) == CoverageInfo.COVERAGE_BIS_B) {
+    		_bisSupport = true;
+    	}
+    }
+    
+
+    /**
+     * This method provides the functionality of actually parsing 
+     * through the service books on the handheld and determining
+     * which traffic routes are available based on that information.
+     * Before 4.2.0, this method is necessary to determine coverage.
+     */
+    private void parseServiceBooks()
+    {
+        // Add in our new items by scrolling through the ServiceBook API.
+        ServiceBook sb = ServiceBook.getSB();
+        ServiceRecord[] records = sb.findRecordsByCid("IPPP");      // The IPPP service represents the data channel for MDS and BIS-B
+        if( records == null ) {
+            return;
+        }
+        
+        int numRecords = records.length;
+        for( int i = 0; i < numRecords; i++ ) {
+            ServiceRecord myRecord = records[i];
+            String name = myRecord.getName();       // Technically, not needed but nice for debugging.
+            String uid = myRecord.getUid();         // Technically, not needed but nice for debugging.
+
+            // First of all, the CID itself should be equal to IPPP if this is going to be an IPPP service book.
+            if( myRecord.isValid() && !myRecord.isDisabled() ) {
+                // Now we need to determine if the service book is Desktop or BIS.  One could check against the
+                // name but that is unreliable.  The best mechanism is to leverage the security of the service
+                // book to determine the security of the channel.
+                int encryptionMode = myRecord.getEncryptionMode();
+                if( encryptionMode == ServiceRecord.ENCRYPT_RIM ) {
+                    _mdsSupport = true;
+                } else {
+                    _bisSupport = true;
+                }
+            }
+        }
+    }
 	//Sub Classes will override run
 	public void run(){
+		
+	}
+
+	public void coverageStatusChanged(int[] arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

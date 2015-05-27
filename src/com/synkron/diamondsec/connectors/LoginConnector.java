@@ -25,7 +25,7 @@ public class LoginConnector extends InfoWareConnector{
 		super(Url);
 		strCustomerID = CustomerID;
 	}
-
+	
 	public void run(){
 		OutputStream oStream = null;
 		InputStream iStream = null;
